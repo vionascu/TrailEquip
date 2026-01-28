@@ -11,12 +11,6 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
 }
 
-// Disable bootJar and jar for root project
-tasks {
-    bootJar { enabled = false }
-    jar { enabled = false }
-}
-
 allprojects {
     group = "com.trailequip"
     version = "0.1.0-SNAPSHOT"
