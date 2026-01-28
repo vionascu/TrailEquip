@@ -32,7 +32,7 @@ build_ui:
   image: node:20-alpine
   script:
     - cd $CI_PROJECT_DIR/ui
-    - npm ci --prefer-offline --no-audit
+    - npm install --prefer-offline --no-audit
     - npm run build
   cache:
     paths:
