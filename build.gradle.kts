@@ -37,12 +37,6 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
 
-    dependencyManagement {
-        imports {
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.0")
-        }
-    }
-
     dependencies {
         // Core Spring Boot
         implementation("org.springframework.boot:spring-boot-starter-actuator")
