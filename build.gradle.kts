@@ -11,6 +11,11 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
 }
 
+// Disable jar creation for root project since it only orchestrates builds
+tasks {
+    jar.configure { enabled = false }
+}
+
 allprojects {
     group = "com.trailequip"
     version = "0.1.0-SNAPSHOT"
