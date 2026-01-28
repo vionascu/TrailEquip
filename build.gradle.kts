@@ -4,7 +4,7 @@ plugins {
     id("java")
     id("org.springframework.boot") version "3.2.0" apply false
     id("io.spring.dependency-management") version "1.1.4" apply false
-    id("com.diffplug.spotless") version "6.23.0"
+    id("com.diffplug.spotless") version "6.25.0"
 }
 
 java {
@@ -35,7 +35,7 @@ subprojects {
     spotless {
         java {
             importOrder()
-            palantirJavaFormat()
+            palantirJavaFormat("2.42.0")  // Explicitly specify version compatible with Java 21
             endWithNewline()
         }
     }
