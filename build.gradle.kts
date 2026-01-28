@@ -19,7 +19,12 @@ allprojects {
         mavenCentral()
         maven { url = uri("https://repo.spring.io/release") }
     }
+}
 
+subprojects {
+    apply(plugin = "java")
+    apply(plugin = "org.springframework.boot")
+    apply(plugin = "io.spring.dependency-management")
     apply(plugin = "com.diffplug.spotless")
 
     spotless {
@@ -30,15 +35,10 @@ allprojects {
             endWithNewline()
         }
     }
-}
-
-subprojects {
-    apply(plugin = "java")
-    apply(plugin = "org.springframework.boot")
-    apply(plugin = "io.spring.dependency-management")
 
     dependencies {
         // Core Spring Boot
+        implementation("org.springframework.boot:spring-boot-starter-web")
         implementation("org.springframework.boot:spring-boot-starter-actuator")
         implementation("org.springframework.boot:spring-boot-starter-validation")
 
