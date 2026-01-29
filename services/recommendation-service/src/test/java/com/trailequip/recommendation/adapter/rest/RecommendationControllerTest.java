@@ -1,5 +1,11 @@
 package com.trailequip.recommendation.adapter.rest;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trailequip.recommendation.application.service.EquipmentRecommendationService;
 import com.trailequip.recommendation.application.service.TrailRecommendationService;
@@ -14,12 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(RecommendationController.class)
 public class RecommendationControllerTest {
@@ -51,18 +51,11 @@ public class RecommendationControllerTest {
         equipmentRecommendation = new HashMap<>();
         equipmentRecommendation.put("trailName", "Omu Peak Loop");
         equipmentRecommendation.put("difficulty", "MEDIUM");
-        equipmentRecommendation.put("recommendedGear", Arrays.asList(
-                "Hiking Boots",
-                "Rain Jacket",
-                "Backpack (30L)",
-                "Water Bottle",
-                "Sun Protection"
-        ));
-        equipmentRecommendation.put("warnings", Arrays.asList(
-                "Exposure on ridge",
-                "Weather-dependent",
-                "Bring extra layers"
-        ));
+        equipmentRecommendation.put("recommendedGear",
+            Arrays.asList("Hiking Boots", "Rain Jacket", "Backpack (30L)", "Water Bottle",
+                "Sun Protection"));
+        equipmentRecommendation.put("warnings",
+            Arrays.asList("Exposure on ridge", "Weather-dependent", "Bring extra layers"));
         equipmentRecommendation.put("explanation", "MEDIUM difficulty trail with exposure and changeable weather requires proper gear");
 
         Map<String, Object> trail1 = new HashMap<>();
