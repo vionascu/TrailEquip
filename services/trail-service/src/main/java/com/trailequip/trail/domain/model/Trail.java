@@ -1,9 +1,10 @@
 package com.trailequip.trail.domain.model;
 
-import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "trails")
@@ -52,9 +53,10 @@ public class Trail {
 
     public Trail() {}
 
-    public Trail(String name, String description, Double distance, Integer elevationGain,
-                 Integer elevationLoss, Integer durationMinutes, Double maxSlope, Double avgSlope,
-                 List<String> terrain, Difficulty difficulty, List<String> hazards, String source) {
+    public Trail(
+            String name, String description, Double distance, Integer elevationGain,
+            Integer elevationLoss, Integer durationMinutes, Double maxSlope, Double avgSlope,
+            List<String> terrain, Difficulty difficulty, List<String> hazards, String source) {
         this.name = name;
         this.description = description;
         this.distance = distance;

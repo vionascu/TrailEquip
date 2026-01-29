@@ -1,5 +1,9 @@
 package com.trailequip.trail.adapter.rest;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import com.trailequip.trail.application.service.TrailApplicationService;
 import com.trailequip.trail.domain.model.Trail;
 import io.swagger.v3.oas.annotations.Operation;
@@ -7,10 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/trails")
@@ -25,8 +25,7 @@ public class TrailController {
 
     @GetMapping
     @Operation(summary = "List all trails")
-    public ResponseEntity<List<Trail>> getAllTrails(
-            @RequestParam(required = false) String difficulty) {
+    public ResponseEntity<List<Trail>> getAllTrails(@RequestParam(required = false) String difficulty) {
         if (difficulty != null) {
             List<Trail> trails = trailApplicationService.getTrailsByDifficulty(difficulty);
             return ResponseEntity.ok(trails);
@@ -40,7 +39,7 @@ public class TrailController {
     public ResponseEntity<Trail> getTrail(@PathVariable UUID id) {
         Optional<Trail> trail = trailApplicationService.getTrail(id);
         return trail.map(ResponseEntity::ok)
-                   .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping

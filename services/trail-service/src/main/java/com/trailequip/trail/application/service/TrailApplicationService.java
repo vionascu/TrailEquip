@@ -1,12 +1,13 @@
 package com.trailequip.trail.application.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import com.trailequip.trail.domain.model.Trail;
 import com.trailequip.trail.domain.repository.TrailRepository;
 import com.trailequip.trail.domain.service.DifficultyClassifier;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class TrailApplicationService {
