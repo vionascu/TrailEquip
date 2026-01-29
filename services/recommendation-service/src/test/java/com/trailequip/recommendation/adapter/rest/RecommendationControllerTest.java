@@ -132,8 +132,12 @@ public class RecommendationControllerTest {
     @Test
     public void testGetEquipmentRecommendationsForExtremeWeather() throws Exception {
         Map<String, Object> extremeWeatherRecommendation = new HashMap<>(equipmentRecommendation);
-        extremeWeatherRecommendation.put("warnings",
-                Arrays.asList("EXTREME: High wind speed", "Risk of hypothermia", "Trail may be impassable",
+        extremeWeatherRecommendation.put(
+                "warnings",
+                Arrays.asList(
+                        "EXTREME: High wind speed",
+                        "Risk of hypothermia",
+                        "Trail may be impassable",
                         "Consider turning back"));
 
         when(equipmentRecommendationService.recommendEquipment(any())).thenReturn(extremeWeatherRecommendation);
@@ -197,8 +201,11 @@ public class RecommendationControllerTest {
         riskAssessment.put("overallRisk", "MODERATE");
         riskAssessment.put("weatherRisk", "LOW");
         riskAssessment.put("terrainRisk", "MODERATE");
-        riskAssessment.put("recommendations",
-                Arrays.asList("Start early to avoid evening storms", "Bring emergency shelter",
+        riskAssessment.put(
+                "recommendations",
+                Arrays.asList(
+                        "Start early to avoid evening storms",
+                        "Bring emergency shelter",
                         "Let someone know your plans"));
 
         when(equipmentRecommendationService.getTrailRiskAssessment(any())).thenReturn(riskAssessment);
