@@ -14,9 +14,7 @@ import java.util.UUID;
 public interface TrailRepository extends JpaRepository<Trail, UUID> {
     List<Trail> findByDifficulty(String difficulty);
 
-    @Query(value = "SELECT * FROM trails WHERE difficulty = :difficulty OR :difficulty IS NULL ORDER BY name", nativeQuery = true)
-    List<Trail> findTrailsInArea(@Param("centerLat") double centerLat,
-                                 @Param("centerLon") double centerLon,
-                                 @Param("radiusKm") double radiusKm,
-                                 @Param("difficulty") String difficulty);
+    // For now, return trails by difficulty (geographic queries require PostGIS)
+    @Query("SELECT t FROM Trail t WHERE t.difficulty = :difficulty OR :difficulty IS NULL ORDER BY t.name")
+    List<Trail> findTrailsInArea(@Param("difficulty") String difficulty);
 }

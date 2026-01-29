@@ -39,10 +39,12 @@ public class TrailApplicationService {
     }
 
     public List<Trail> suggestTrailsInArea(double centerLat, double centerLon, double radiusKm, String difficulty) {
-        return trailRepository.findTrailsInArea(centerLat, centerLon, radiusKm, difficulty);
+        // Note: Geographic filtering with centerLat/centerLon/radiusKm requires PostGIS
+        // For now, only filtering by difficulty is implemented
+        return trailRepository.findTrailsInArea(difficulty);
     }
 
     public void deleteTrail(UUID id) {
-        trailRepository.delete(id);
+        trailRepository.deleteById(id);
     }
 }
