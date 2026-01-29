@@ -187,7 +187,7 @@ export default function App() {
       )}
 
       {/* Main Content - 3 Column Layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr 320px', gap: 0, flex: 1, minHeight: 0, overflow: 'hidden' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr 320px', gap: 0, flex: 1, minHeight: 0, overflow: 'hidden', width: '100%' }}>
         {/* Left Sidebar: Trail List */}
         <div style={{ borderRight: '1px solid #ddd', display: 'flex', flexDirection: 'column', backgroundColor: '#f8f9fa', minHeight: 0, overflow: 'hidden' }}>
           <div style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>
@@ -270,11 +270,11 @@ export default function App() {
         </div>
 
         {/* Center: Map */}
-        <div style={{ position: 'relative', overflow: 'hidden', minHeight: 0 }}>
+        <div style={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
           <MapContainer
             center={mapCenter}
             zoom={12}
-            style={{ height: '100%', width: '100%', position: 'absolute', top: 0, left: 0 }}
+            style={{ height: '100%', width: '100%' }}
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
