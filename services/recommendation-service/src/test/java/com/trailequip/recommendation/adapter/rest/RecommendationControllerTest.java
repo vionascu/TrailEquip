@@ -51,12 +51,13 @@ public class RecommendationControllerTest {
         equipmentRecommendation = new HashMap<>();
         equipmentRecommendation.put("trailName", "Omu Peak Loop");
         equipmentRecommendation.put("difficulty", "MEDIUM");
-        equipmentRecommendation.put("recommendedGear",
-            Arrays.asList("Hiking Boots", "Rain Jacket", "Backpack (30L)", "Water Bottle",
-                "Sun Protection"));
-        equipmentRecommendation.put("warnings",
-            Arrays.asList("Exposure on ridge", "Weather-dependent", "Bring extra layers"));
-        equipmentRecommendation.put("explanation", "MEDIUM difficulty trail with exposure and changeable weather requires proper gear");
+        equipmentRecommendation.put(
+            "recommendedGear",
+            Arrays.asList("Hiking Boots", "Rain Jacket", "Backpack (30L)", "Water Bottle", "Sun Protection"));
+        equipmentRecommendation.put(
+            "warnings", Arrays.asList("Exposure on ridge", "Weather-dependent", "Bring extra layers"));
+        equipmentRecommendation.put(
+            "explanation", "MEDIUM difficulty trail with exposure and changeable weather requires proper gear");
 
         Map<String, Object> trail1 = new HashMap<>();
         trail1.put("id", "trail-1");
@@ -79,12 +80,11 @@ public class RecommendationControllerTest {
 
     @Test
     public void testGetEquipmentRecommendations() throws Exception {
-        when(equipmentRecommendationService.recommendEquipment(any()))
-                .thenReturn(equipmentRecommendation);
+        when(equipmentRecommendationService.recommendEquipment(any())).thenReturn(equipmentRecommendation);
 
         mockMvc.perform(post("/api/v1/recommendations/equipment")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(recommendationRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(recommendationRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.trailName").value("Omu Peak Loop"))
                 .andExpect(jsonPath("$.recommendedGear", hasSize(5)))
