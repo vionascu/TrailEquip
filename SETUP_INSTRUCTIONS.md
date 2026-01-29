@@ -39,7 +39,9 @@ Your complete TrailEquip monorepo has been created at:
 
 ## 🚀 NEXT STEPS: Run on Your Laptop
 
-### Step 1: Verify Docker is Running
+### Option A: Run with Docker (Recommended)
+
+#### Step 1: Verify Docker is Running
 
 ```bash
 docker --version        # Should be 24.x+
@@ -218,6 +220,21 @@ GitLab detects `.gitlab-ci.yml` and:
 - Creates Docker images (optional)
 
 Monitor at: `https://gitlab.com/YOUR-USERNAME/trail-equip/-/pipelines`
+
+---
+
+## Option B: Run with Local PostgreSQL (No Docker)
+
+If you prefer to run services locally without Docker, see [POSTGRES_LOCAL_SETUP.md](POSTGRES_LOCAL_SETUP.md) for:
+- Installing PostgreSQL via Homebrew
+- Creating the `trailequip` database
+- Configuring your Spring Boot application
+- Managing PostgreSQL locally
+
+This approach is useful for:
+- Lightweight local development
+- Running services in your IDE debugger
+- Faster iteration on code changes
 
 ---
 
