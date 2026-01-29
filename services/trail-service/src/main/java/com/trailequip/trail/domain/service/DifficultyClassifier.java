@@ -26,9 +26,9 @@ public class DifficultyClassifier {
     private boolean hasRockClimbingTerrain(Trail trail) {
         if (trail.getTerrain() == null) return false;
         for (String terrain : trail.getTerrain()) {
-            if (terrain.equalsIgnoreCase("scramble") ||
-                terrain.equalsIgnoreCase("technical_climbing") ||
-                terrain.equalsIgnoreCase("via_ferrata")) {
+            if (terrain.equalsIgnoreCase("scramble")
+                    || terrain.equalsIgnoreCase("technical_climbing")
+                    || terrain.equalsIgnoreCase("via_ferrata")) {
                 return true;
             }
         }
@@ -36,33 +36,44 @@ public class DifficultyClassifier {
     }
 
     private boolean isHard(Trail trail) {
-        return trail.getDistance() != null && trail.getDistance() <= 50 &&
-               trail.getElevationGain() != null && trail.getElevationGain() <= 2000 &&
-               trail.getAvgSlope() != null && trail.getAvgSlope() <= 20 &&
-               trail.getMaxSlope() != null && trail.getMaxSlope() <= 50;
+        return trail.getDistance() != null
+                && trail.getDistance() <= 50
+                && trail.getElevationGain() != null
+                && trail.getElevationGain() <= 2000
+                && trail.getAvgSlope() != null
+                && trail.getAvgSlope() <= 20
+                && trail.getMaxSlope() != null
+                && trail.getMaxSlope() <= 50;
     }
 
     private boolean isMedium(Trail trail) {
-        return trail.getDistance() != null && trail.getDistance() <= 30 &&
-               trail.getElevationGain() != null && trail.getElevationGain() <= 1200 &&
-               trail.getAvgSlope() != null && trail.getAvgSlope() <= 15 &&
-               trail.getMaxSlope() != null && trail.getMaxSlope() <= 30 &&
-               !hasForbiddenTerrainForMedium(trail);
+        return trail.getDistance() != null
+                && trail.getDistance() <= 30
+                && trail.getElevationGain() != null
+                && trail.getElevationGain() <= 1200
+                && trail.getAvgSlope() != null
+                && trail.getAvgSlope() <= 15
+                && trail.getMaxSlope() != null
+                && trail.getMaxSlope() <= 30
+                && !hasForbiddenTerrainForMedium(trail);
     }
 
     private boolean isEasy(Trail trail) {
-        return trail.getDistance() != null && trail.getDistance() <= 15 &&
-               trail.getElevationGain() != null && trail.getElevationGain() <= 500 &&
-               trail.getAvgSlope() != null && trail.getAvgSlope() <= 10 &&
-               !hasForbiddenTerrainForEasy(trail);
+        return trail.getDistance() != null
+                && trail.getDistance() <= 15
+                && trail.getElevationGain() != null
+                && trail.getElevationGain() <= 500
+                && trail.getAvgSlope() != null
+                && trail.getAvgSlope() <= 10
+                && !hasForbiddenTerrainForEasy(trail);
     }
 
     private boolean hasForbiddenTerrainForEasy(Trail trail) {
         if (trail.getTerrain() == null) return false;
         for (String terrain : trail.getTerrain()) {
-            if (terrain.equalsIgnoreCase("scramble") ||
-                terrain.equalsIgnoreCase("exposed_ridge") ||
-                terrain.equalsIgnoreCase("via_ferrata")) {
+            if (terrain.equalsIgnoreCase("scramble")
+                    || terrain.equalsIgnoreCase("exposed_ridge")
+                    || terrain.equalsIgnoreCase("via_ferrata")) {
                 return true;
             }
         }
@@ -72,8 +83,8 @@ public class DifficultyClassifier {
     private boolean hasForbiddenTerrainForMedium(Trail trail) {
         if (trail.getTerrain() == null) return false;
         for (String terrain : trail.getTerrain()) {
-            if (terrain.equalsIgnoreCase("via_ferrata") ||
-                terrain.equalsIgnoreCase("technical_climbing")) {
+            if (terrain.equalsIgnoreCase("via_ferrata")
+                    || terrain.equalsIgnoreCase("technical_climbing")) {
                 return true;
             }
         }

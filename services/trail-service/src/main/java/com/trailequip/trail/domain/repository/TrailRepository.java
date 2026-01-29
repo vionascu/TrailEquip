@@ -2,7 +2,6 @@ package com.trailequip.trail.domain.repository;
 
 import com.trailequip.trail.domain.model.Trail;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

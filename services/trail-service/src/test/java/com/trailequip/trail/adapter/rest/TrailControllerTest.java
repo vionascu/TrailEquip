@@ -53,8 +53,7 @@ public class TrailControllerTest {
                 Arrays.asList("forest", "alpine_meadow", "exposed_ridge"),
                 Difficulty.MEDIUM,
                 Arrays.asList("exposure", "weather_dependent"),
-                "openstreetmap"
-        );
+                "openstreetmap");
         sampleTrail.setId(trailId);
     }
 
@@ -129,8 +128,7 @@ public class TrailControllerTest {
                 Arrays.asList("scramble", "exposed_ridge", "rock"),
                 Difficulty.ROCK_CLIMBING,
                 Arrays.asList("exposure", "loose_rock", "high_altitude"),
-                "openstreetmap"
-        );
+                "openstreetmap");
         newTrail.setId(UUID.randomUUID());
 
         when(trailApplicationService.createTrail(any(Trail.class)))
@@ -207,8 +205,7 @@ public class TrailControllerTest {
                 Arrays.asList("forest", "lake"),
                 null,
                 Arrays.asList(),
-                "openstreetmap"
-        );
+                "openstreetmap");
         trailWithoutDifficulty.setId(UUID.randomUUID());
 
         Trail savedTrail = new Trail(
@@ -223,8 +220,7 @@ public class TrailControllerTest {
                 Arrays.asList("forest", "lake"),
                 Difficulty.EASY,
                 Arrays.asList(),
-                "openstreetmap"
-        );
+                "openstreetmap");
         savedTrail.setId(trailWithoutDifficulty.getId());
 
         when(trailApplicationService.createTrail(any(Trail.class)))
