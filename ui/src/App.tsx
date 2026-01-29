@@ -470,8 +470,8 @@ export default function App() {
 
       {/* Footer */}
       <div style={{ backgroundColor: '#f0f0f0', padding: '10px 20px', borderTop: '1px solid #ddd', fontSize: '11px', color: '#666', flexShrink: 0 }}>
-        <span>✅ Using open-source Bucegi Mountains trail data</span> |
-        <a href="/api/v1/health" target="_blank" rel="noreferrer" style={{ marginLeft: '10px', color: '#0366d6' }}>API Health</a> |
+        <span>✅ Using open-source Bucegi Mountains trail data</span> {' | '}
+        <a href="/api/v1/health" target="_blank" rel="noreferrer" style={{ marginLeft: '10px', color: '#0366d6' }}>API Health</a> {' | '}
         <a href="/swagger-ui.html" target="_blank" rel="noreferrer" style={{ marginLeft: '10px', color: '#0366d6' }}>API Docs</a>
       </div>
     </div>
