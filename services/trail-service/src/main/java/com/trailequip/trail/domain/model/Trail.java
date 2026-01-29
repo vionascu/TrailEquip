@@ -53,9 +53,18 @@ public class Trail {
     public Trail() {}
 
     public Trail(
-            String name, String description, Double distance, Integer elevationGain,
-            Integer elevationLoss, Integer durationMinutes, Double maxSlope, Double avgSlope,
-            List<String> terrain, Difficulty difficulty, List<String> hazards, String source) {
+            String name,
+            String description,
+            Double distance,
+            Integer elevationGain,
+            Integer elevationLoss,
+            Integer durationMinutes,
+            Double maxSlope,
+            Double avgSlope,
+            List<String> terrain,
+            Difficulty difficulty,
+            List<String> hazards,
+            String source) {
         this.name = name;
         this.description = description;
         this.distance = distance;
@@ -70,24 +79,79 @@ public class Trail {
         this.source = source;
     }
 
-    public UUID getId() { return id; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public Double getDistance() { return distance; }
-    public Integer getElevationGain() { return elevationGain; }
-    public Integer getElevationLoss() { return elevationLoss; }
-    public Integer getDurationMinutes() { return durationMinutes; }
-    public Double getMaxSlope() { return maxSlope; }
-    public Double getAvgSlope() { return avgSlope; }
-    public List<String> getTerrain() { return terrain; }
-    public Difficulty getDifficulty() { return difficulty; }
-    public List<String> getHazards() { return hazards; }
-    public List<Waypoint> getWaypoints() { return waypoints; }
-    public String getSource() { return source; }
-    public Instant getCreatedAt() { return createdAt; }
-    public Instant getUpdatedAt() { return updatedAt; }
+    public UUID getId() {
+        return id;
+    }
 
-    public void setId(UUID id) { this.id = id; }
-    public void setDifficulty(Difficulty difficulty) { this.difficulty = difficulty; }
-    public void setWaypoints(List<Waypoint> waypoints) { this.waypoints = waypoints; }
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public Integer getElevationGain() {
+        return elevationGain;
+    }
+
+    public Integer getElevationLoss() {
+        return elevationLoss;
+    }
+
+    public Integer getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public Double getMaxSlope() {
+        return maxSlope;
+    }
+
+    public Double getAvgSlope() {
+        return avgSlope;
+    }
+
+    public List<String> getTerrain() {
+        return terrain;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public List<String> getHazards() {
+        return hazards;
+    }
+
+    public List<Waypoint> getWaypoints() {
+        return waypoints;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public void setWaypoints(List<Waypoint> waypoints) {
+        this.waypoints = waypoints;
+    }
 }

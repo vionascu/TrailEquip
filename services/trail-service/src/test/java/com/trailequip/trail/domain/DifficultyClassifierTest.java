@@ -10,7 +10,6 @@ import com.trailequip.trail.domain.service.DifficultyClassifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 class DifficultyClassifierTest {
 
     private DifficultyClassifier classifier;

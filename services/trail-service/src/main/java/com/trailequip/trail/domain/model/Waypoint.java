@@ -18,12 +18,31 @@ public class Waypoint {
         this.elevation = elevation;
     }
 
-    public Double getLatitude() { return latitude; }
-    public Double getLongitude() { return longitude; }
-    public Integer getElevation() { return elevation; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
+    public Double getLatitude() {
+        return latitude;
+    }
 
-    public void setName(String name) { this.name = name; }
-    public void setDescription(String description) { this.description = description; }
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public Integer getElevation() {
+        return elevation;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
