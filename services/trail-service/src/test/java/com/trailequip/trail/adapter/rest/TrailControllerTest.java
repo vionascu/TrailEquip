@@ -122,7 +122,9 @@ public class TrailControllerTest {
 
         when(trailApplicationService.createTrail(any(Trail.class))).thenReturn(newTrail);
 
-        mockMvc.perform(post("/api/v1/trails").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(newTrail)))
+        mockMvc.perform(post("/api/v1/trails")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(newTrail)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Sphinx Ridge Scramble"))
                 .andExpect(jsonPath("$.difficulty").value("ROCK_CLIMBING"));
@@ -137,7 +139,9 @@ public class TrailControllerTest {
         when(trailApplicationService.getTrail(trailId)).thenReturn(Optional.of(sampleTrail));
         when(trailApplicationService.createTrail(any(Trail.class))).thenReturn(sampleTrail);
 
-        mockMvc.perform(put("/api/v1/trails/{id}", trailId).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(sampleTrail)))
+        mockMvc.perform(put("/api/v1/trails/{id}", trailId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sampleTrail)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Trail Name"));
 
@@ -157,9 +161,15 @@ public class TrailControllerTest {
 
     @Test
     public void testSuggestTrailsInArea() throws Exception {
-        when(trailApplicationService.suggestTrailsInArea(45.5, 25.3, 10.0, "EASY")).thenReturn(Arrays.asList(sampleTrail));
+        when(trailApplicationService.suggestTrailsInArea(45.5, 25.3, 10.0, "EASY"))
+                .thenReturn(Arrays.asList(sampleTrail));
 
-        mockMvc.perform(post("/api/v1/trails/suggest").param("centerLat", "45.5").param("centerLon", "25.3").param("radiusKm", "10").param("difficulty", "EASY").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api/v1/trails/suggest")
+                        .param("centerLat", "45.5")
+                        .param("centerLon", "25.3")
+                        .param("radiusKm", "10")
+                        .param("difficulty", "EASY")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
 
@@ -200,7 +210,9 @@ public class TrailControllerTest {
 
         when(trailApplicationService.createTrail(any(Trail.class))).thenReturn(savedTrail);
 
-        mockMvc.perform(post("/api/v1/trails").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(trailWithoutDifficulty)))
+        mockMvc.perform(post("/api/v1/trails")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(trailWithoutDifficulty)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.difficulty").value("EASY"));
 
