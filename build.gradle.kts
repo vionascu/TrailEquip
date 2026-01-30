@@ -51,6 +51,7 @@ subprojects {
 
         // Logging
         implementation("org.springframework.boot:spring-boot-starter-logging")
+        implementation("org.projectlombok:lombok")
 
         // Testing
         testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -60,6 +61,9 @@ subprojects {
         testImplementation("org.mockito:mockito-junit-jupiter")
         testImplementation("org.testcontainers:testcontainers:1.19.3")
         testImplementation("org.testcontainers:junit-jupiter:1.19.3")
+
+        // Annotation processing
+        annotationProcessor("org.projectlombok:lombok")
     }
 
     tasks.withType<Test> {
