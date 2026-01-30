@@ -1,8 +1,8 @@
 package com.trailequip.trail.domain.model;
 
 import jakarta.persistence.*;
-import org.locationtech.jts.geom.LineString;
 import java.util.UUID;
+import org.locationtech.jts.geom.LineString;
 
 /**
  * TrailSegment represents a portion of a trail (OSM way).

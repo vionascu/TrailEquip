@@ -4,14 +4,13 @@ import com.trailequip.trail.domain.model.Trail;
 import com.trailequip.trail.domain.repository.TrailRepository;
 import com.trailequip.trail.infrastructure.overpass.OverpassApiClient;
 import com.trailequip.trail.infrastructure.overpass.OverpassRelation;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Service for ingesting hiking trails from OpenStreetMap via Overpass API.

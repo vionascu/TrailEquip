@@ -6,13 +6,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.trailequip.trail.domain.model.Trail;
 import com.trailequip.trail.domain.model.Waypoint;
+import java.time.Instant;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.List;
 
 /**
  * Service for exporting trails in various formats (GeoJSON, GPX, etc.).

@@ -2,16 +2,15 @@ package com.trailequip.trail.application.service;
 
 import com.trailequip.trail.domain.model.*;
 import com.trailequip.trail.infrastructure.overpass.OverpassRelation;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Service for converting OSM Overpass relations to Trail domain objects.

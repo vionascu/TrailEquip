@@ -1,7 +1,7 @@
 package com.trailequip.trail.infrastructure.overpass;
 
-import org.locationtech.jts.geom.Coordinate;
 import java.util.List;
+import org.locationtech.jts.geom.Coordinate;
 
 /**
  * Represents an OSM hiking route relation fetched from Overpass API.

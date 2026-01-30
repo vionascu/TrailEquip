@@ -3,12 +3,11 @@ package com.trailequip.trail.application.service;
 import com.trailequip.trail.domain.model.Trail;
 import com.trailequip.trail.domain.model.Waypoint;
 import com.trailequip.trail.infrastructure.overpass.OverpassRelation;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

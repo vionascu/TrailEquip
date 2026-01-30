@@ -5,16 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trailequip.trail.domain.model.Difficulty;
 import com.trailequip.trail.domain.model.Trail;
 import com.trailequip.trail.domain.model.Waypoint;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.PrecisionModel;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
