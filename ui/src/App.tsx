@@ -152,8 +152,8 @@ const BUCEGI_WEATHER: WeatherForecast[] = (() => {
 })();
 
 export default function App() {
-  const [trails, setTrails] = useState<Trail[]>(BUCEGI_TRAILS);
-  const [selectedTrail, setSelectedTrail] = useState<Trail | null>(BUCEGI_TRAILS[0]);
+  const [trails, setTrails] = useState<Trail[]>([]);
+  const [selectedTrail, setSelectedTrail] = useState<Trail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filterDifficulty, setFilterDifficulty] = useState<string>('ALL');
