@@ -796,7 +796,7 @@ export default function App() {
 
                 {showStats && (
                   <div style={{ marginTop: '10px', backgroundColor: '#f8f9fa', padding: '12px', borderRadius: '4px' }}>
-                    <ul style={{ margin: 0, padding: '0 0 0 20px', fontSize: '12px', lineHeight: '1.8' }}>
+                    <ul style={{ margin: 0, padding: '0 0 0 20px', fontSize: '11px', lineHeight: '1.6' }}>
                       <li><strong>Distance:</strong> {selectedTrail.distance} km</li>
                       <li><strong>Elevation Gain:</strong> {selectedTrail.elevationGain} m</li>
                       <li><strong>Elevation Loss:</strong> {selectedTrail.elevationLoss} m</li>
@@ -806,17 +806,19 @@ export default function App() {
                     </ul>
 
                     {/* Elevation Profile Graph */}
-                    <div style={{ marginTop: '12px', borderTop: '1px solid #ddd', paddingTop: '12px' }}>
-                      <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', color: '#2c3e50' }}>
+                    <div style={{ marginTop: '10px', borderTop: '1px solid #ddd', paddingTop: '10px' }}>
+                      <div style={{ fontSize: '11px', fontWeight: 'bold', marginBottom: '8px', color: '#2c3e50' }}>
                         📈 Elevation Profile
                       </div>
-                      <ElevationProfile
-                        waypoints={selectedTrail.waypoints}
-                        distance={selectedTrail.distance}
-                        elevationGain={selectedTrail.elevationGain}
-                        elevationLoss={selectedTrail.elevationLoss}
-                        maxSlope={selectedTrail.maxSlope}
-                      />
+                      <div style={{ width: '100%', maxHeight: '300px', overflowY: 'auto' }}>
+                        <ElevationProfile
+                          waypoints={selectedTrail.waypoints}
+                          distance={selectedTrail.distance}
+                          elevationGain={selectedTrail.elevationGain}
+                          elevationLoss={selectedTrail.elevationLoss}
+                          maxSlope={selectedTrail.maxSlope}
+                        />
+                      </div>
                     </div>
                   </div>
                 )}

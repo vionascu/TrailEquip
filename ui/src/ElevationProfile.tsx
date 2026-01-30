@@ -92,39 +92,43 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
   }
 
   return (
-    <div style={{ marginTop: '12px' }}>
-      <ResponsiveContainer width="100%" height={250}>
+    <div style={{ marginTop: '12px', width: '100%', overflowX: 'auto' }}>
+      <ResponsiveContainer width="100%" height={220} minWidth={280}>
         <LineChart
           data={profileData}
-          margin={{ top: 5, right: 20, left: -20, bottom: 5 }}
+          margin={{ top: 10, right: 5, left: 0, bottom: 30 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
           <XAxis
             dataKey="distance"
             stroke="#999"
-            tick={{ fontSize: 11 }}
-            label={{ value: 'Distance (km)', position: 'insideBottom', offset: -5, fill: '#666', fontSize: 11 }}
+            tick={{ fontSize: 9 }}
+            angle={-45}
+            textAnchor="end"
+            height={50}
           />
           <YAxis
             stroke="#999"
-            tick={{ fontSize: 11 }}
-            domain={['dataMin - 100', 'dataMax + 100']}
-            label={{ value: 'Elevation (m)', angle: -90, position: 'insideLeft', fill: '#666', fontSize: 11 }}
+            tick={{ fontSize: 9 }}
+            domain={['dataMin - 50', 'dataMax + 50']}
+            width={40}
           />
           <Tooltip
             contentStyle={{
               backgroundColor: '#fff',
               border: '1px solid #ccc',
               borderRadius: '4px',
-              fontSize: '11px',
+              fontSize: '10px',
+              padding: '6px',
             }}
             formatter={(value: any) => [`${value}m`, 'Elevation']}
             labelFormatter={(label: any) => `${label}km`}
+            cursor={{ stroke: '#ff6b6b', strokeWidth: 1 }}
           />
           <Line
             type="monotone"
             dataKey="elevation"
-            stroke="#ff6b6b"
+            stroke="#e74c3c"
             dot={false}
             isAnimationActive={false}
             strokeWidth={2}
@@ -132,37 +136,31 @@ export const ElevationProfile: React.FC<ElevationProfileProps> = ({
         </LineChart>
       </ResponsiveContainer>
 
-      {/* Elevation stats under the graph */}
+      {/* Elevation stats under the graph - 2x2 grid */}
       <div
         style={{
-          marginTop: '8px',
+          marginTop: '10px',
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
-          gap: '8px',
-          fontSize: '11px',
+          gap: '6px',
+          fontSize: '10px',
         }}
       >
-        <div style={{ backgroundColor: '#fff', padding: '6px', borderRadius: '3px', border: '1px solid #ddd' }}>
-          <span style={{ color: '#999' }}>📈 Gain:</span>
-          <br />
-          <span style={{ fontWeight: 'bold', color: '#d32f2f' }}>{elevationGain}m</span>
+        <div style={{ backgroundColor: '#fff', padding: '5px', borderRadius: '2px', border: '1px solid #e0e0e0', textAlign: 'center' }}>
+          <div style={{ color: '#999', fontSize: '9px', marginBottom: '2px' }}>📈 Gain</div>
+          <div style={{ fontWeight: 'bold', color: '#d32f2f', fontSize: '11px' }}>{elevationGain}m</div>
         </div>
-        <div style={{ backgroundColor: '#fff', padding: '6px', borderRadius: '3px', border: '1px solid #ddd' }}>
-          <span style={{ color: '#999' }}>📉 Loss:</span>
-          <br />
-          <span style={{ fontWeight: 'bold', color: '#1976d2' }}>{elevationLoss}m</span>
+        <div style={{ backgroundColor: '#fff', padding: '5px', borderRadius: '2px', border: '1px solid #e0e0e0', textAlign: 'center' }}>
+          <div style={{ color: '#999', fontSize: '9px', marginBottom: '2px' }}>📉 Loss</div>
+          <div style={{ fontWeight: 'bold', color: '#1976d2', fontSize: '11px' }}>{elevationLoss}m</div>
         </div>
-        <div style={{ backgroundColor: '#fff', padding: '6px', borderRadius: '3px', border: '1px solid #ddd' }}>
-          <span style={{ color: '#999' }}>⛏️ Max Slope:</span>
-          <br />
-          <span style={{ fontWeight: 'bold', color: '#f57c00' }}>{maxSlope}%</span>
+        <div style={{ backgroundColor: '#fff', padding: '5px', borderRadius: '2px', border: '1px solid #e0e0e0', textAlign: 'center' }}>
+          <div style={{ color: '#999', fontSize: '9px', marginBottom: '2px' }}>⛏️ Max Slope</div>
+          <div style={{ fontWeight: 'bold', color: '#f57c00', fontSize: '11px' }}>{maxSlope}%</div>
         </div>
-        <div
-          style={{ backgroundColor: '#fff', padding: '6px', borderRadius: '3px', border: '1px solid #ddd' }}
-        >
-          <span style={{ color: '#999' }}>📍 Total Dist:</span>
-          <br />
-          <span style={{ fontWeight: 'bold', color: '#00796b' }}>{distance}km</span>
+        <div style={{ backgroundColor: '#fff', padding: '5px', borderRadius: '2px', border: '1px solid #e0e0e0', textAlign: 'center' }}>
+          <div style={{ color: '#999', fontSize: '9px', marginBottom: '2px' }}>📍 Distance</div>
+          <div style={{ fontWeight: 'bold', color: '#00796b', fontSize: '11px' }}>{distance}km</div>
         </div>
       </div>
     </div>
