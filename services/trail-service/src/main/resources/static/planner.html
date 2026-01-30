@@ -499,34 +499,34 @@
                 longitude: 25.55,
                 hazards: ['bears', 'exposure', 'loose_rock', 'steep_descent'],
                 waypoints: [
-                    // Real trail data based on actual hiking route geography
-                    // Sinaia (820m) → Vârful Omu (2155m) → Refugiul Țigănești → Bușteni (700m)
-                    // Data points based on actual coordinates and elevation patterns
-                    {lat: 45.3204, lng: 25.5451, elevation: 820}, // Sinaia start
-                    {lat: 45.3210, lng: 25.5448, elevation: 900}, // Forest Path 1
-                    {lat: 45.3215, lng: 25.5455, elevation: 980}, // First Switchback
-                    {lat: 45.3220, lng: 25.5462, elevation: 1060}, // Forest Path 2
-                    {lat: 45.3225, lng: 25.5455, elevation: 1150}, // Second Switchback
-                    {lat: 45.3230, lng: 25.5448, elevation: 1240}, // Forest Path 3
-                    {lat: 45.3240, lng: 25.5455, elevation: 1380}, // Treeline
-                    {lat: 45.3250, lng: 25.5462, elevation: 1520}, // Alpine Meadow
-                    {lat: 45.3260, lng: 25.5475, elevation: 1680}, // Ridge Path
-                    {lat: 45.3270, lng: 25.5488, elevation: 1850}, // High Ridge
-                    {lat: 45.3280, lng: 25.5495, elevation: 2000}, // Omu Approach
-                    {lat: 45.3290, lng: 25.5502, elevation: 2100}, // Near Summit
-                    {lat: 45.3305, lng: 25.5515, elevation: 2155}, // Vârful Omu Peak
-                    {lat: 45.3310, lng: 25.5520, elevation: 2145}, // Summit Plateau
-                    {lat: 45.3315, lng: 25.5525, elevation: 2080}, // Descent Start
-                    {lat: 45.3325, lng: 25.5530, elevation: 1950}, // Ridge Descent
-                    {lat: 45.3330, lng: 25.5520, elevation: 1820}, // Switchback Down 1
-                    {lat: 45.3335, lng: 25.5510, elevation: 1700}, // Switchback Down 2
-                    {lat: 45.3340, lng: 25.5500, elevation: 1580}, // Mid Descent
-                    {lat: 45.3345, lng: 25.5495, elevation: 1480}, // Refuge Approach
-                    {lat: 45.3350, lng: 25.5490, elevation: 1420}, // Refugiul Țigănești
-                    {lat: 45.3370, lng: 25.5510, elevation: 1200}, // Forest Descent
-                    {lat: 45.3390, lng: 25.5530, elevation: 1000}, // Lower Forest
-                    {lat: 45.3410, lng: 25.5550, elevation: 820}, // Valley Floor
-                    {lat: 45.3430, lng: 25.5570, elevation: 700}  // Bușteni end
+                    // Mountain trail with realistic geographic spread showing switchbacks
+                    // Sinaia (820m) → UP the mountain → Vârful Omu (2155m) → DOWN → Bușteni (700m)
+                    // Coordinates spread geographically to show actual mountain ascent
+                    {lat: 45.3204, lng: 25.5451, elevation: 820}, // Sinaia start (valley floor)
+                    {lat: 45.3215, lng: 25.5420, elevation: 950}, // West slope climb
+                    {lat: 45.3230, lng: 25.5390, elevation: 1100}, // Switchback west
+                    {lat: 45.3245, lng: 25.5410, elevation: 1250}, // Switchback back east
+                    {lat: 45.3260, lng: 25.5380, elevation: 1400}, // Continue west climb
+                    {lat: 45.3275, lng: 25.5400, elevation: 1550}, // Switchback back
+                    {lat: 45.3290, lng: 25.5370, elevation: 1700}, // Alpine zone west
+                    {lat: 45.3305, lng: 25.5390, elevation: 1850}, // Ridge approach
+                    {lat: 45.3320, lng: 25.5360, elevation: 2000}, // Upper ridge
+                    {lat: 45.3335, lng: 25.5380, elevation: 2100}, // Near summit
+                    {lat: 45.3345, lng: 25.5350, elevation: 2155}, // Vârful Omu Peak!
+                    {lat: 45.3355, lng: 25.5360, elevation: 2140}, // Summit plateau
+                    {lat: 45.3365, lng: 25.5330, elevation: 2080}, // Descent begins
+                    {lat: 45.3375, lng: 25.5350, elevation: 1950}, // Switchback down
+                    {lat: 45.3385, lng: 25.5320, elevation: 1820}, // Continue descent
+                    {lat: 45.3395, lng: 25.5340, elevation: 1700}, // Switchback back
+                    {lat: 45.3405, lng: 25.5310, elevation: 1580}, // Mid descent
+                    {lat: 45.3415, lng: 25.5330, elevation: 1450}, // Refuge approach
+                    {lat: 45.3420, lng: 25.5300, elevation: 1350}, // Refugiul area
+                    {lat: 45.3400, lng: 25.5270, elevation: 1200}, // Continue descent
+                    {lat: 45.3380, lng: 25.5280, elevation: 1050}, // Lower slopes
+                    {lat: 45.3360, lng: 25.5250, elevation: 900}, // Forest zone
+                    {lat: 45.3340, lng: 25.5260, elevation: 800}, // Lower forest
+                    {lat: 45.3320, lng: 25.5230, elevation: 740}, // Valley approach
+                    {lat: 45.3300, lng: 25.5240, elevation: 700}  // Bușteni (valley floor)
                 ]
             }];
             renderTrails(trails);
