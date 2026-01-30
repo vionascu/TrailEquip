@@ -533,21 +533,28 @@
         }
 
         function renderTrails(trailsToShow) {
-            const trailsList = document.getElementById('trailsList');
-            trailsList.innerHTML = trailsToShow.map((trail, index) => `
-                <div class="trail-item ${selectedTrail?.id === trail.id ? 'active' : ''}" onclick="selectTrail(${index})">
-                    <div class="trail-item-name">${trail.name}</div>
-                    <div class="trail-item-meta">
-                        <div>📏 ${trail.distance} km</div>
-                        <div>⏱️ ${trail.duration}h</div>
-                        <div>⬆️ ${trail.elevationGain}m</div>
-                        <div>⬇️ ${trail.elevationLoss}m</div>
+            try {
+                const trailsList = document.getElementById('trailsList');
+                trailsList.innerHTML = trailsToShow.map((trail, index) => {
+                    const difficulty = (trail.difficulty || 'medium').toLowerCase();
+                    return `
+                    <div class="trail-item ${selectedTrail?.id === trail.id ? 'active' : ''}" onclick="selectTrail(${index})">
+                        <div class="trail-item-name">${trail.name}</div>
+                        <div class="trail-item-meta">
+                            <div>📏 ${trail.distance || 0} km</div>
+                            <div>⏱️ ${trail.duration || 2}h</div>
+                            <div>⬆️ ${trail.elevationGain || 0}m</div>
+                            <div>⬇️ ${trail.elevationLoss || 0}m</div>
+                        </div>
+                        <span class="difficulty-badge difficulty-${difficulty}">
+                            ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+                        </span>
                     </div>
-                    <span class="difficulty-badge difficulty-${trail.difficulty}">
-                        ${trail.difficulty.toUpperCase()}
-                    </span>
-                </div>
-            `).join('');
+                `;
+                }).join('');
+            } catch (error) {
+                console.error('Error rendering trails:', error);
+            }
         }
 
         function selectTrail(index) {
@@ -558,26 +565,33 @@
         }
 
         function drawTrailOnMap(trail) {
-            if (trailPolyline) map.removeLayer(trailPolyline);
+            try {
+                if (trailPolyline) map.removeLayer(trailPolyline);
 
-            if (trail.waypoints && trail.waypoints.length > 0) {
-                const points = trail.waypoints.map(wp => [wp.lat, wp.lng]);
-                trailPolyline = L.polyline(points, {
-                    color: '#667eea',
-                    weight: 4,
-                    opacity: 0.8,
-                    lineCap: 'round',
-                    lineJoin: 'round'
-                }).addTo(map);
+                if (trail.waypoints && trail.waypoints.length > 0) {
+                    const points = trail.waypoints.map(wp => [
+                        (wp.lat || wp.latitude),
+                        (wp.lng || wp.longitude)
+                    ]);
+                    trailPolyline = L.polyline(points, {
+                        color: '#667eea',
+                        weight: 4,
+                        opacity: 0.8,
+                        lineCap: 'round',
+                        lineJoin: 'round'
+                    }).addTo(map);
 
-                map.fitBounds(trailPolyline.getBounds().pad(0.1));
+                    map.fitBounds(trailPolyline.getBounds().pad(0.1));
 
-                // Show and render elevation profile
-                renderElevationProfile(trail);
-            } else {
-                const marker = L.marker([trail.latitude, trail.longitude]).addTo(map);
-                map.setView([trail.latitude, trail.longitude], 12);
-                document.getElementById('elevationProfile').classList.remove('active');
+                    // Show and render elevation profile
+                    renderElevationProfile(trail);
+                } else {
+                    const marker = L.marker([trail.latitude, trail.longitude]).addTo(map);
+                    map.setView([trail.latitude, trail.longitude], 12);
+                    document.getElementById('elevationProfile').classList.remove('active');
+                }
+            } catch (error) {
+                console.error('Error drawing trail on map:', error);
             }
         }
 
@@ -592,15 +606,20 @@
 
         async function fetchWeather() {
             try {
-                const [year, month, day] = selectedDate.split('-');
-                const response = await fetch(
-                    `https://archive-api.open-meteo.com/v1/archive?` +
-                    `latitude=${selectedTrail.latitude}&longitude=${selectedTrail.longitude}` +
-                    `&start_date=${selectedDate}&end_date=${selectedDate}` +
-                    `&hourly=temperature_2m,precipitation,weathercode,windspeed_10m` +
-                    `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode,windspeed_10m_max` +
-                    `&timezone=auto`
-                );
+                const url = new URL('https://archive-api.open-meteo.com/v1/archive');
+                url.searchParams.append('latitude', selectedTrail.latitude);
+                url.searchParams.append('longitude', selectedTrail.longitude);
+                url.searchParams.append('start_date', selectedDate);
+                url.searchParams.append('end_date', selectedDate);
+                url.searchParams.append('daily', 'temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode,windspeed_10m_max');
+                url.searchParams.append('timezone', 'auto');
+
+                const response = await fetch(url.toString());
+                if (!response.ok) {
+                    console.warn('Weather API returned status:', response.status);
+                    displayWeatherMock();
+                    return;
+                }
                 const data = await response.json();
                 displayWeather(data);
             } catch (error) {
@@ -783,95 +802,99 @@
         let elevationChart = null;
 
         function renderElevationProfile(trail) {
-            if (!trail.waypoints || trail.waypoints.length === 0) return;
+            try {
+                if (!trail.waypoints || trail.waypoints.length === 0) return;
 
-            const elevationProfile = document.getElementById('elevationProfile');
-            elevationProfile.classList.add('active');
+                const elevationProfile = document.getElementById('elevationProfile');
+                elevationProfile.classList.add('active');
 
-            // Calculate elevation data
-            const elevations = trail.waypoints.map(wp => wp.elevation || 0).filter(e => e > 0);
-            if (elevations.length === 0) {
-                elevationProfile.classList.remove('active');
-                return;
-            }
-
-            const maxElev = Math.max(...elevations);
-            const minElev = Math.min(...elevations);
-            const distances = [];
-
-            // Calculate cumulative distances
-            let cumDist = 0;
-            for (let i = 0; i < trail.waypoints.length; i++) {
-                if (i === 0) {
-                    distances.push(0);
-                } else {
-                    const wp1 = trail.waypoints[i - 1];
-                    const wp2 = trail.waypoints[i];
-                    const lat1 = wp1.lat * Math.PI / 180;
-                    const lat2 = wp2.lat * Math.PI / 180;
-                    const lng1 = wp1.lng * Math.PI / 180;
-                    const lng2 = wp2.lng * Math.PI / 180;
-
-                    const dLat = lat2 - lat1;
-                    const dLng = lng2 - lng1;
-                    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                              Math.cos(lat1) * Math.cos(lat2) *
-                              Math.sin(dLng/2) * Math.sin(dLng/2);
-                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                    const segDist = 6371 * c; // Earth radius in km
-                    cumDist += segDist;
-                    distances.push(cumDist.toFixed(1));
+                // Calculate elevation data
+                const elevations = trail.waypoints.map(wp => wp.elevation || 0).filter(e => e > 0);
+                if (elevations.length === 0) {
+                    elevationProfile.classList.remove('active');
+                    return;
                 }
-            }
 
-            // Update stats
-            document.getElementById('elevationMax').textContent = maxElev + 'm';
-            document.getElementById('elevationMin').textContent = minElev + 'm';
-            document.getElementById('elevationGain').textContent = trail.elevationGain + 'm';
+                const maxElev = Math.max(...elevations);
+                const minElev = Math.min(...elevations);
+                const distances = [];
 
-            // Create chart
-            const ctx = document.getElementById('elevationChart').getContext('2d');
-            if (elevationChart) elevationChart.destroy();
+                // Calculate cumulative distances
+                let cumDist = 0;
+                for (let i = 0; i < trail.waypoints.length; i++) {
+                    if (i === 0) {
+                        distances.push(0);
+                    } else {
+                        const wp1 = trail.waypoints[i - 1];
+                        const wp2 = trail.waypoints[i];
+                        const lat1 = (wp1.lat || wp1.latitude) * Math.PI / 180;
+                        const lat2 = (wp2.lat || wp2.latitude) * Math.PI / 180;
+                        const lng1 = (wp1.lng || wp1.longitude) * Math.PI / 180;
+                        const lng2 = (wp2.lng || wp2.longitude) * Math.PI / 180;
 
-            elevationChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: distances,
-                    datasets: [{
-                        label: 'Elevation',
-                        data: trail.waypoints.map(wp => wp.elevation || 0),
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 2,
-                        pointBackgroundColor: '#667eea',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            min: minElev - 100,
-                            max: maxElev + 100,
-                            ticks: { font: { size: 10 }, color: '#666' },
-                            grid: { color: '#eee' }
-                        },
-                        x: {
-                            ticks: { font: { size: 9 }, color: '#666' },
-                            grid: { display: false }
-                        }
+                        const dLat = lat2 - lat1;
+                        const dLng = lng2 - lng1;
+                        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                                  Math.cos(lat1) * Math.cos(lat2) *
+                                  Math.sin(dLng/2) * Math.sin(dLng/2);
+                        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                        const segDist = 6371 * c; // Earth radius in km
+                        cumDist += segDist;
+                        distances.push(cumDist.toFixed(1));
                     }
                 }
-            });
+
+                // Update stats
+                document.getElementById('elevationMax').textContent = maxElev + 'm';
+                document.getElementById('elevationMin').textContent = minElev + 'm';
+                document.getElementById('elevationGain').textContent = (trail.elevationGain || 0) + 'm';
+
+                // Create chart
+                const ctx = document.getElementById('elevationChart').getContext('2d');
+                if (elevationChart) elevationChart.destroy();
+
+                elevationChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: distances,
+                        datasets: [{
+                            label: 'Elevation',
+                            data: trail.waypoints.map(wp => wp.elevation || 0),
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 2,
+                            pointBackgroundColor: '#667eea',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: minElev - 100,
+                                max: maxElev + 100,
+                                ticks: { font: { size: 10 }, color: '#666' },
+                                grid: { color: '#eee' }
+                            },
+                            x: {
+                                ticks: { font: { size: 9 }, color: '#666' },
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error rendering elevation profile:', error);
+            }
         }
 
         // Search functionality
