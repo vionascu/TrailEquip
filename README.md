@@ -41,11 +41,14 @@ docker-compose restart trail-service        # Restart after code changes
 
 ## Documentation
 
-- [Detailed Architecture](./docs/ARCHITECTURE.md)
-- [Setup Guide](./docs/QUICKSTART.md)
-- [API Documentation](./docs/API/)
-- [Product Artifacts](./docs/PRODUCT/)
-- [Architecture Decisions](./docs/ADRs/)
+**📚 ALL DOCUMENTATION IN `/docs` FOLDER**
+
+- [📖 Documentation Index](./docs/README.md)
+- [🚀 Startup Guide](./docs/STARTUP.md)
+- [⚙️ Configuration](./docs/CONFIGURATION.md)
+- [🏗️ Architecture](./docs/ARCHITECTURE.md)
+- [📡 API Reference](./docs/API_REFERENCE.md)
+- [🧪 Testing Strategy](./docs/TESTING_STRATEGY.md)
 
 ## Key Features (v1)
 

@@ -1,17 +1,8 @@
-# TrailEquip Documentation
+# TrailEquip Documentation Index
 
-**📍 SINGLE SOURCE OF TRUTH**
+Welcome to TrailEquip! This folder contains all documentation needed to understand, develop, deploy, and maintain the application.
 
-This `/docs/` folder contains everything needed to understand, develop, deploy, and maintain TrailEquip.
-
-> **🎯 Important:** All documentation has been consolidated into this single folder.
-> - ✅ `/docs/` ← Start here
-> - ❌ `/documentation/` ← Deprecated
-> - ❌ `/Documents/` ← Deprecated
->
-> To avoid confusion, use ONLY the `/docs/` folder for all documentation.
-
-## 📚 Complete Documentation Index
+## 📚 Documentation Structure
 
 ### Getting Started
 
