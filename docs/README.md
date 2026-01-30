@@ -11,6 +11,24 @@ This `/docs/` folder contains everything needed to understand, develop, deploy, 
 >
 > To avoid confusion, use ONLY the `/docs/` folder for all documentation.
 
+## 🎨 Architecture Diagrams (Start Here for Visual Learners!)
+
+**Want to understand the system quickly?** These are the easiest way to get started:
+
+0. **[ARCHITECTURE_SIMPLE.md](ARCHITECTURE_SIMPLE.md)** - 👶 Simple explanation for beginners (even 15-year-olds!)
+   - How each service works with real-world analogies
+   - Step-by-step examples
+   - "Restaurant" analogy to understand microservices
+
+1. **[ARCHITECTURE_DIAGRAM.md](ARCHITECTURE_DIAGRAM.md)** - 📊 Visual diagrams and flowcharts
+   - Complete system diagram
+   - Data flow diagrams
+   - Request journey maps
+   - Port reference table
+   - Service responsibilities
+
+---
+
 ## 📚 Complete Documentation Index
 
 ### Getting Started
@@ -29,27 +47,77 @@ Start here if you're new to the project:
    - Creating .env file
    - Profile selection (dev/prod)
 
+3. **[GETTING_STARTED.md](GETTING_STARTED.md)** - Quick start for new developers
+   - Project setup
+   - Development environment
+   - First build and run
+   - IDE configuration
+
 ### Development
 
 For implementing features and understanding the codebase:
 
-3. **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design
+4. **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design
    - Clean Architecture layers
    - Component descriptions
    - Data flow diagrams
    - Technology stack
+   - Service interactions
 
-4. **[API_REFERENCE.md](API_REFERENCE.md)** - REST API documentation
+5. **[API_REFERENCE.md](API_REFERENCE.md)** - REST API documentation
    - All endpoints (ingestion, export, search)
    - Request/response formats
    - Usage examples
    - Data models
 
-5. **[TESTING_STRATEGY.md](TESTING_STRATEGY.md)** - Quality assurance
+6. **[CRUD_TESTS.md](CRUD_TESTS.md)** - REST API test documentation
+   - Testing all endpoints
+   - Request/response examples
+   - Common test scenarios
+
+7. **[TESTING_STRATEGY.md](TESTING_STRATEGY.md)** - Quality assurance
    - Test coverage requirements (80% minimum)
    - Test organization
    - Running tests
    - CI/CD integration
+
+### Deployment & Infrastructure
+
+For deployment and infrastructure setup:
+
+8. **[GITLAB_SETUP.md](GITLAB_SETUP.md)** - GitLab CI/CD configuration
+   - 6 deployment options
+   - GitLab Runner setup
+   - Cloud CI/CD pipeline
+   - GitLab Pages deployment
+   - Troubleshooting
+
+9. **[POSTGRES_LOCAL_SETUP.md](POSTGRES_LOCAL_SETUP.md)** - Local PostgreSQL setup
+   - Installation via Homebrew
+   - Database initialization
+   - Spring Boot configuration
+   - Useful commands and troubleshooting
+
+10. **[DEPLOYMENT_SUMMARY.md](DEPLOYMENT_SUMMARY.md)** - Deployment status
+    - Build and infrastructure updates
+    - CI/CD pipeline status
+    - Next steps after deployment
+    - Quality checklist
+
+11. **[FOLDER_STRUCTURE.md](FOLDER_STRUCTURE.md)** - Project directory layout
+    - Source code organization
+    - Build and infrastructure structure
+    - Documentation location
+    - Navigation guide
+
+### Frontend & UI
+
+12. **[MAP_STYLING_GUIDE.md](MAP_STYLING_GUIDE.md)** - UI map styling
+    - OpenTopoMap integration
+    - Trail rendering and styling
+    - CSS enhancements
+    - Performance optimization
+    - Troubleshooting
 
 ### Source Code
 
@@ -404,7 +472,27 @@ Include:
 
 ---
 
+---
+
+## 📦 Documentation Consolidation Completed
+
+As of January 30, 2026:
+- ✅ All documentation consolidated into `/docs/` (single source of truth)
+- ✅ Deprecated `/documentation/` folder removed
+- ✅ Deprecated `/Documents/` folder removed
+- ✅ 13 comprehensive markdown files organized by topic
+- ✅ All links updated and verified
+- ✅ No orphaned references remaining
+
+**Total Documentation:**
+- 13 markdown files
+- ~14,000+ lines of current, production-ready documentation
+- Covers: setup, architecture, API, testing, deployment, CI/CD, and UI
+
+---
+
 **Last Updated**: January 30, 2026
 **Status**: Production Ready ✓
 **Coverage**: 80%+ ✓
 **Deployment**: Docker Ready ✓
+**Documentation**: Consolidated & Organized ✓

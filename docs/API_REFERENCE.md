@@ -1,10 +1,29 @@
 # TrailEquip API Reference
 
+## Overview
+
+TrailEquip provides a comprehensive REST API with 20+ endpoints across 3 microservices:
+
+1. **Trail Service** (8081) - Trail management, OSM integration, exports
+2. **Weather Service** (8082) - Weather forecasting and provider management
+3. **Recommendation Service** (8083) - Equipment recommendations
+
+All requests route through the **API Gateway** (8080) using Spring Cloud Gateway.
+
 ## Base URL
 
 ```
 http://localhost:8080/api/v1
 ```
+
+## Service Architecture
+
+| Service | Port | Base Path | Purpose |
+|---------|------|-----------|---------|
+| **API Gateway** | 8080 | `/` | Request routing, Swagger, health checks |
+| **Trail Service** | 8081 | `/api/v1/trails`, `/api/v1/osm/trails` | Trail CRUD, OSM, export, search |
+| **Weather Service** | 8082 | `/api/v1/weather` | Weather forecasts, provider info |
+| **Recommendation Service** | 8083 | `/api/v1/recommendations` | Equipment recommendations |
 
 ## Authentication
 
@@ -602,6 +621,261 @@ GET /trails?page=0&size=20&sort=distance,desc
 
 ---
 
+---
+
+## Weather Service Endpoints
+
+### Get Weather Forecast
+
+Get detailed weather forecast for a specific location and date range.
+
+```
+GET /weather/forecast?lat=45.35&lon=25.54&startDate=2026-01-30&endDate=2026-02-02&timezone=Europe/Bucharest
+```
+
+**Parameters:**
+- `lat` (required): Latitude in WGS84 (e.g., 45.35 for Bucegi Mountains)
+- `lon` (required): Longitude in WGS84 (e.g., 25.54)
+- `startDate` (required): ISO 8601 date format (e.g., 2026-01-30)
+- `endDate` (required): ISO 8601 date format (e.g., 2026-02-02)
+- `timezone` (optional): IANA timezone name. Default: `Europe/Bucharest`
+
+**Response** (200 OK):
+
+```json
+{
+  "location": {
+    "latitude": 45.35,
+    "longitude": 25.54
+  },
+  "forecastData": {
+    "time": [
+      "2026-01-30",
+      "2026-01-31",
+      "2026-02-01",
+      "2026-02-02"
+    ],
+    "temperature_2m_max": [8, 10, 12, 7],
+    "temperature_2m_min": [2, 3, 5, 1],
+    "precipitation_sum": [0, 2.5, 8.3, 1.2],
+    "wind_speed_10m_max": [25, 30, 35, 28]
+  },
+  "provider": "open-meteo",
+  "cached": false,
+  "cacheValidUntil": "2026-01-30T22:00:00Z"
+}
+```
+
+**Response Fields:**
+- `location` - Request location
+- `forecastData` - Weather arrays (indexed by day)
+  - `time` - ISO date strings
+  - `temperature_2m_max/min` - Temperature in °C
+  - `precipitation_sum` - Precipitation in mm
+  - `wind_speed_10m_max` - Wind speed in km/h
+- `provider` - "open-meteo" (Open-Meteo API)
+- `cached` - Whether this result came from cache
+- `cacheValidUntil` - Cache expiration timestamp (6-hour TTL)
+
+**Curl Example:**
+
+```bash
+curl "http://localhost:8080/api/v1/weather/forecast?lat=45.35&lon=25.54&startDate=2026-01-30&endDate=2026-02-02"
+```
+
+---
+
+### List Weather Providers
+
+Get available weather data providers and their status.
+
+```
+GET /weather/providers
+```
+
+**Response** (200 OK):
+
+```json
+{
+  "providers": [
+    {
+      "id": "open-meteo",
+      "name": "Open-Meteo",
+      "status": "active",
+      "description": "Free weather API with no authentication required"
+    }
+  ]
+}
+```
+
+**Curl Example:**
+
+```bash
+curl http://localhost:8080/api/v1/weather/providers
+```
+
+**Notes:**
+- Open-Meteo is the current default provider
+- Additional providers can be implemented without breaking existing clients
+- Each provider returns data in the same format for consistency
+
+---
+
+## Recommendation Service Endpoints
+
+### Get Equipment Recommendations
+
+Get intelligent equipment recommendations based on trail conditions and weather forecast.
+
+```
+POST /recommendations/equipment
+Content-Type: application/json
+
+{
+  "trailId": "550e8400-e29b-41d4-a716-446655440000",
+  "forecastStart": "2026-01-30",
+  "forecastEnd": "2026-02-02"
+}
+```
+
+**Request Body:**
+- `trailId` (required): UUID of the trail
+- `forecastStart` (required): ISO date format start of forecast period
+- `forecastEnd` (required): ISO date format end of forecast period
+
+**Response** (200 OK):
+
+```json
+{
+  "equipment": [
+    {
+      "category": "LAYERS",
+      "items": [
+        {
+          "name": "Base Layer (Thermal/Merino)",
+          "reason": "Expected temperatures 1-5°C"
+        },
+        {
+          "name": "Mid-Layer (Fleece)",
+          "reason": "Insulation needed for sustained activity"
+        }
+      ]
+    },
+    {
+      "category": "OUTERWEAR",
+      "items": [
+        {
+          "name": "Insulated Jacket",
+          "reason": "Low temperatures at elevation (1800m+)"
+        },
+        {
+          "name": "Rain Shell",
+          "reason": "50% precipitation chance on forecast days"
+        },
+        {
+          "name": "Gaiters",
+          "reason": "Protection from snow and mud"
+        }
+      ]
+    },
+    {
+      "category": "TRACTION",
+      "items": [
+        {
+          "name": "Microspikes",
+          "reason": "Combination of low temp (2-5°C) + precipitation creates ice hazard"
+        },
+        {
+          "name": "Insulated Boots",
+          "reason": "Extended time at altitude with low temps"
+        }
+      ]
+    },
+    {
+      "category": "ACCESSORIES",
+      "items": [
+        {
+          "name": "Warm Hat & Gloves",
+          "reason": "Summit exposure with 30+ km/h winds"
+        },
+        {
+          "name": "Sunscreen & Glasses",
+          "reason": "High UV at elevation despite cool temps"
+        }
+      ]
+    }
+  ],
+  "warnings": [
+    "High wind expected on ridges (30+ km/h) - consider route timing",
+    "Variable conditions - prepare for rapid changes in weather",
+    "Trail difficulty HARD + winter conditions - experience required"
+  ],
+  "summary": "Comprehensive winter layering system with full precipitation protection. Microspikes essential for ice management. Exposure hazard on ridges - monitor wind conditions."
+}
+```
+
+**Response Fields:**
+- `equipment` - Array of equipment categories with items
+  - `category` - Equipment type (LAYERS, OUTERWEAR, TRACTION, ACCESSORIES, SPECIALIZED)
+  - `items` - List of specific recommendations
+    - `name` - Equipment item name
+    - `reason` - Explanation for recommendation
+- `warnings` - Array of important safety considerations
+- `summary` - High-level overview of recommended gear strategy
+
+**Equipment Categories:**
+
+| Category | Examples | When Used |
+|----------|----------|-----------|
+| **LAYERS** | Base layers, mid-layers, insulation | Temperature < 15°C or sustained activity |
+| **OUTERWEAR** | Rain shells, insulated jackets, gaiters | Precipitation or wind > 20 km/h |
+| **TRACTION** | Microspikes, crampons, trail shoes | Ice risk or snow coverage |
+| **ACCESSORIES** | Hat, gloves, sunscreen, goggles | Altitude, UV exposure, wind |
+| **SPECIALIZED** | Climbing gear, avalanche equipment | Technical terrain or hazard conditions |
+
+**Curl Example:**
+
+```bash
+curl -X POST http://localhost:8080/api/v1/recommendations/equipment \
+  -H "Content-Type: application/json" \
+  -d '{
+    "trailId": "550e8400-e29b-41d4-a716-446655440000",
+    "forecastStart": "2026-01-30",
+    "forecastEnd": "2026-02-02"
+  }'
+```
+
+**Recommendation Logic:**
+
+The service analyzes:
+
+1. **Temperature Analysis** (from forecast)
+   - 0-5°C → thermal base layer + insulation
+   - 5-10°C → fleece mid-layer
+   - 10-15°C → wind layer
+   - 15°C+ → minimal layering
+
+2. **Precipitation Assessment**
+   - 0-20% → no additional gear
+   - 20-50% → rain shell
+   - 50%+ → full rain gear (jacket + pants)
+
+3. **Wind Evaluation**
+   - < 20 km/h → minimal impact
+   - 20-30 km/h → consider timing of ridge traversal
+   - > 30 km/h → consider cancellation or route change
+
+4. **Terrain Mapping**
+   - Scrambling trails → climbing protection
+   - Alpine terrain → avalanche assessment
+   - Exposed ridges → wind/lightning awareness
+
+5. **Temperature + Precipitation Combination**
+   - Low temp + precipitation = ice hazard → microspikes
+   - High altitude + low temp = cold injury risk → insulation + movement
+
+---
+
 ## Swagger/OpenAPI Documentation
 
 View interactive API documentation:
@@ -610,7 +884,73 @@ View interactive API documentation:
 http://localhost:8080/swagger-ui.html
 ```
 
+All endpoints are documented with:
+- Endpoint descriptions
+- Request/response schemas
+- Example values
+- Try-it-out functionality
+
+---
+
+## Health Check Endpoints
+
+### Gateway Health
+
+```
+GET /actuator/health
+```
+
+**Response:**
+```json
+{
+  "status": "UP"
+}
+```
+
+### Trail Service Health
+
+```
+GET /osm/trails/health
+```
+
+**Response:**
+```json
+{
+  "service": "OSM Integration",
+  "status": "UP",
+  "totalTrails": 142,
+  "osmTrails": 135
+}
+```
+
+---
+
+## Error Handling
+
+### Common HTTP Status Codes
+
+| Code | Meaning | Example |
+|------|---------|---------|
+| **200** | Success | Trail found, forecast retrieved |
+| **201** | Created | New trail ingested |
+| **204** | No Content | Trail deleted successfully |
+| **400** | Bad Request | Invalid query parameters |
+| **404** | Not Found | Trail ID doesn't exist |
+| **500** | Server Error | Database connection lost |
+
+### Error Response Format
+
+```json
+{
+  "error": "Trail not found",
+  "message": "No trail exists with ID: 550e8400-e29b-41d4-a716-446655440000",
+  "timestamp": "2026-01-30T10:15:32Z",
+  "status": 404
+}
+```
+
 ---
 
 **For configuration, see [CONFIGURATION.md](CONFIGURATION.md)**
 **For startup instructions, see [STARTUP.md](STARTUP.md)**
+**For architecture details, see [ARCHITECTURE.md](ARCHITECTURE.md)**

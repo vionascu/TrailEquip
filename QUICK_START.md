@@ -141,13 +141,18 @@ The dev server output appears in the terminal where you ran `npm run dev`
 
 ## Database
 
-The application uses PostgreSQL 14+ with the database:
+The application uses PostgreSQL 17 with PostGIS spatial extension:
 - **Database Name**: `trailequip`
 - **User**: `trailequip`
-- **Password**: `trailequip_dev`
 - **Host**: `localhost:5432`
+- **PostGIS Extension**: Required for geographic queries (installed automatically with setup)
 
 Tables are automatically created on first run via Hibernate/JPA.
+
+### System Requirements
+- PostgreSQL 17 with PostGIS 3.6+ installed
+- Java 21 or higher
+- Node.js 18+
 
 ## Architecture
 

@@ -10,6 +10,10 @@ FRONTEND_DIR="$PROJECT_DIR/ui"
 BACKEND_PORT=8081
 POSTGRES_PORT=5432
 
+# Set Java configuration for Java 21
+export JAVA_HOME=/opt/homebrew/opt/openjdk@21
+export PATH=$JAVA_HOME/bin:$PATH
+
 # Color codes for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -30,11 +34,12 @@ if ! command -v java &> /dev/null; then
 fi
 echo -e "${GREEN}✓ Java found: $(java -version 2>&1 | head -1)${NC}"
 
-if ! command -v psql &> /dev/null; then
-    echo -e "${RED}✗ PostgreSQL not found. Please install PostgreSQL${NC}"
+# Use PostgreSQL 17
+if ! command -v /opt/homebrew/opt/postgresql@17/bin/psql &> /dev/null; then
+    echo -e "${RED}✗ PostgreSQL 17 not found. Please install PostgreSQL 17 with PostGIS support${NC}"
     exit 1
 fi
-echo -e "${GREEN}✓ PostgreSQL client found${NC}"
+echo -e "${GREEN}✓ PostgreSQL 17 client found${NC}"
 
 if ! command -v node &> /dev/null; then
     echo -e "${RED}✗ Node.js not found. Please install Node.js${NC}"
@@ -48,28 +53,28 @@ if ! command -v npm &> /dev/null; then
 fi
 echo -e "${GREEN}✓ npm found: $(npm --version)${NC}\n"
 
-# Step 2: Start PostgreSQL
-echo -e "${YELLOW}[2/5] Starting PostgreSQL...${NC}"
+# Step 2: Start PostgreSQL 17
+echo -e "${YELLOW}[2/5] Starting PostgreSQL 17 with PostGIS...${NC}"
 
 # Check if PostgreSQL is already running
-if pg_isready -h localhost -p $POSTGRES_PORT &> /dev/null; then
-    echo -e "${GREEN}✓ PostgreSQL is already running${NC}"
+if /opt/homebrew/opt/postgresql@17/bin/pg_isready -h localhost -p $POSTGRES_PORT &> /dev/null; then
+    echo -e "${GREEN}✓ PostgreSQL 17 is already running${NC}"
 else
-    echo -e "${BLUE}  Starting PostgreSQL service...${NC}"
-    if brew services start postgresql@15 2>/dev/null; then
-        echo -e "${GREEN}✓ PostgreSQL started successfully${NC}"
+    echo -e "${BLUE}  Starting PostgreSQL 17 service...${NC}"
+    if brew services start postgresql@17 2>/dev/null; then
+        echo -e "${GREEN}✓ PostgreSQL 17 started successfully${NC}"
         sleep 2
     else
-        echo -e "${RED}✗ Failed to start PostgreSQL${NC}"
+        echo -e "${RED}✗ Failed to start PostgreSQL 17${NC}"
         exit 1
     fi
 fi
 
 # Verify PostgreSQL is accessible
-if pg_isready -h localhost -p $POSTGRES_PORT &> /dev/null; then
-    echo -e "${GREEN}✓ PostgreSQL is accessible${NC}\n"
+if /opt/homebrew/opt/postgresql@17/bin/pg_isready -h localhost -p $POSTGRES_PORT &> /dev/null; then
+    echo -e "${GREEN}✓ PostgreSQL 17 is accessible with PostGIS support${NC}\n"
 else
-    echo -e "${RED}✗ PostgreSQL is not responding${NC}"
+    echo -e "${RED}✗ PostgreSQL 17 is not responding${NC}"
     exit 1
 fi
 

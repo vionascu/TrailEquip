@@ -447,34 +447,13 @@ sudo gitlab-runner stop
 
 ---
 
-## **Next Commands**
+## **Next Steps**
 
-```bash
-# Copy and paste these:
+For deployment details, see [DEPLOYMENT_SUMMARY.md](DEPLOYMENT_SUMMARY.md)
 
-# 1. Install runner
-brew install gitlab-runner
+For local PostgreSQL setup, see [POSTGRES_LOCAL_SETUP.md](POSTGRES_LOCAL_SETUP.md)
 
-# 2. Create GitLab project (web UI or use gitlab command)
-# https://gitlab.com/projects/new
-
-# 3. Push code
-cd ~/Projects/TrailEquip
-git remote add gitlab https://gitlab.com/YOUR-USERNAME/trail-equip.git
-git push -u gitlab main
-
-# 4. Register runner
-gitlab-runner register
-
-# 5. Start runner
-gitlab-runner run
-
-# 6. In new terminal, run services
-./gradlew :services:trail-service:bootRun
-
-# 7. Watch pipeline
-# https://gitlab.com/YOUR-USERNAME/trail-equip/-/pipelines
-```
+For general setup, see [STARTUP.md](STARTUP.md)
 
 ---
 

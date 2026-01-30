@@ -2,6 +2,10 @@
 
 # Quick system check for TrailEquip prerequisites
 
+# Set Java configuration for Java 21
+export JAVA_HOME=/opt/homebrew/opt/openjdk@21
+export PATH=$JAVA_HOME/bin:$PATH
+
 echo "╔════════════════════════════════════════════════════════╗"
 echo "║          TrailEquip Quick System Check                 ║"
 echo "╚════════════════════════════════════════════════════════╝"

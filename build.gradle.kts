@@ -4,7 +4,7 @@ plugins {
     id("java")
     id("org.springframework.boot") version "3.2.0" apply false
     id("io.spring.dependency-management") version "1.1.4" apply false
-    id("com.diffplug.spotless") version "6.25.0"
+    // id("com.diffplug.spotless") version "6.25.0"  // Temporarily disabled for Gradle 9 compatibility
 }
 
 java {
@@ -30,15 +30,15 @@ subprojects {
     apply(plugin = "java")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
-    apply(plugin = "com.diffplug.spotless")
+    // apply(plugin = "com.diffplug.spotless")  // Temporarily disabled for Gradle 9 compatibility
 
-    spotless {
-        java {
-            importOrder()
-            palantirJavaFormat("2.42.0")  // Explicitly specify version compatible with Java 21
-            endWithNewline()
-        }
-    }
+    // spotless {
+    //     java {
+    //         importOrder()
+    //         palantirJavaFormat("2.42.0")  // Explicitly specify version compatible with Java 21
+    //         endWithNewline()
+    //     }
+    // }
 
     dependencies {
         // Core Spring Boot
