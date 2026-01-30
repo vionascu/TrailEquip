@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/trails")
 @Tag(name = "Trails", description = "Trail management and browsing")
+@CrossOrigin(
+        origins = "http://localhost:3001",
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
 public class TrailController {
 
     private final TrailApplicationService trailApplicationService;
