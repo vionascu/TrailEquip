@@ -431,12 +431,30 @@
     </div>
 
     <script>
-        // Initialize map
-        const map = L.map('map').setView([45.35, 25.55], 10);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // Initialize map with terrain-focused tile layer
+        const map = L.map('map').setView([45.35, 25.55], 11);
+
+        // OpenTopoMap provides excellent terrain visualization for hiking trails
+        const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 17,
+            attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap'
+        }).addTo(map);
+
+        // Alternative OSM layer
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
             maxZoom: 19
-        }).addTo(map);
+        });
+
+        // Add layer control for switching map styles
+        L.control.layers(
+            {
+                'Terrain (Recommended)': topoLayer,
+                'Street Map': osmLayer
+            },
+            null,
+            { position: 'topright', collapsed: true }
+        ).addTo(map);
 
         let trails = [];
         let selectedTrail = null;
@@ -481,19 +499,63 @@
                 longitude: 25.55,
                 hazards: ['bears', 'exposure', 'loose_rock', 'steep_descent'],
                 waypoints: [
-                    {lat: 45.3200, lng: 25.5450, elevation: 850},
-                    {lat: 45.3250, lng: 25.5470, elevation: 920},
-                    {lat: 45.3300, lng: 25.5490, elevation: 1050},
-                    {lat: 45.3350, lng: 25.5510, elevation: 1200},
-                    {lat: 45.3400, lng: 25.5500, elevation: 1450},
-                    {lat: 45.3450, lng: 25.5520, elevation: 1650},
-                    {lat: 45.3500, lng: 25.5540, elevation: 1850},
-                    {lat: 45.3550, lng: 25.5560, elevation: 2000},
-                    {lat: 45.3600, lng: 25.5550, elevation: 2150},
-                    {lat: 45.3650, lng: 25.5570, elevation: 2050},
-                    {lat: 45.3700, lng: 25.5590, elevation: 1900},
-                    {lat: 45.3750, lng: 25.5600, elevation: 1750},
-                    {lat: 45.3800, lng: 25.5600, elevation: 1400}
+                    // Sinaia start - Forest section with switchbacks
+                    {lat: 45.3200, lng: 25.5450, elevation: 840},
+                    {lat: 45.3205, lng: 25.5445, elevation: 880},
+                    {lat: 45.3210, lng: 25.5440, elevation: 920},
+                    {lat: 45.3215, lng: 25.5448, elevation: 960}, // Switchback 1
+                    {lat: 45.3220, lng: 25.5456, elevation: 1000},
+                    {lat: 45.3225, lng: 25.5464, elevation: 1050},
+                    {lat: 45.3230, lng: 25.5458, elevation: 1100}, // Switchback 2
+                    {lat: 45.3235, lng: 25.5450, elevation: 1150},
+                    {lat: 45.3240, lng: 25.5442, elevation: 1200},
+                    {lat: 45.3245, lng: 25.5450, elevation: 1260}, // Switchback 3
+                    {lat: 45.3250, lng: 25.5460, elevation: 1320},
+                    {lat: 45.3255, lng: 25.5470, elevation: 1380},
+
+                    // Mid section - Steeper climb with tighter switchbacks
+                    {lat: 45.3260, lng: 25.5462, elevation: 1450}, // Switchback 4
+                    {lat: 45.3265, lng: 25.5452, elevation: 1520},
+                    {lat: 45.3270, lng: 25.5442, elevation: 1600},
+                    {lat: 45.3275, lng: 25.5450, elevation: 1680}, // Switchback 5
+                    {lat: 45.3280, lng: 25.5460, elevation: 1760},
+                    {lat: 45.3285, lng: 25.5470, elevation: 1840},
+                    {lat: 45.3290, lng: 25.5462, elevation: 1900}, // Switchback 6
+                    {lat: 45.3295, lng: 25.5450, elevation: 1950},
+                    {lat: 45.3300, lng: 25.5440, elevation: 2000},
+                    {lat: 45.3305, lng: 25.5450, elevation: 2050}, // Switchback 7
+                    {lat: 45.3310, lng: 25.5460, elevation: 2100},
+
+                    // Summit - Vârful Omu plateau
+                    {lat: 45.3320, lng: 25.5480, elevation: 2140},
+                    {lat: 45.3325, lng: 25.5490, elevation: 2155},
+                    {lat: 45.3330, lng: 25.5485, elevation: 2150},
+                    {lat: 45.3335, lng: 25.5475, elevation: 2140},
+                    {lat: 45.3340, lng: 25.5465, elevation: 2135},
+
+                    // Descent towards Refugiul Țigănești with switchbacks
+                    {lat: 45.3345, lng: 25.5475, elevation: 2100}, // Switchback 8
+                    {lat: 45.3350, lng: 25.5485, elevation: 2050},
+                    {lat: 45.3355, lng: 25.5495, elevation: 1980},
+                    {lat: 45.3360, lng: 25.5487, elevation: 1920}, // Switchback 9
+                    {lat: 45.3365, lng: 25.5475, elevation: 1850},
+                    {lat: 45.3370, lng: 25.5463, elevation: 1780},
+                    {lat: 45.3375, lng: 25.5475, elevation: 1710}, // Switchback 10
+                    {lat: 45.3380, lng: 25.5487, elevation: 1640},
+                    {lat: 45.3385, lng: 25.5495, elevation: 1580},
+                    {lat: 45.3390, lng: 25.5487, elevation: 1520}, // Switchback 11
+                    {lat: 45.3395, lng: 25.5475, elevation: 1460},
+
+                    // Refugiul Țigănești area - Moderate descent
+                    {lat: 45.3400, lng: 25.5463, elevation: 1420},
+                    {lat: 45.3405, lng: 25.5455, elevation: 1380},
+                    {lat: 45.3410, lng: 25.5465, elevation: 1340},
+
+                    // Final section to Bușteni - Gentle descent
+                    {lat: 45.3650, lng: 25.5570, elevation: 1200},
+                    {lat: 45.3700, lng: 25.5590, elevation: 1000},
+                    {lat: 45.3750, lng: 25.5600, elevation: 800},
+                    {lat: 45.3800, lng: 25.5600, elevation: 600}
                 ]
             }];
             renderTrails(trails);
