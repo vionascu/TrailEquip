@@ -4,12 +4,11 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.trailequip.weather.application.service.WeatherApplicationService;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.trailequip.weather.application.service.WeatherApplicationService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,13 +60,13 @@ public class WeatherControllerTest {
                 .andExpect(jsonPath("$.wind_speed").value(10.0))
                 .andExpect(jsonPath("$.rain_probability").value(20.0));
 
-        verify(weatherApplicationService, times(1)).getWeatherForecast(45.5, 25.3, LocalDate.now(), LocalDate.now().plusDays(7));
+        verify(weatherApplicationService, times(1))
+                .getWeatherForecast(45.5, 25.3, LocalDate.now(), LocalDate.now().plusDays(7));
     }
 
     @Test
     public void testGetWeatherForecastWithDefaults() throws Exception {
-        when(weatherApplicationService.getWeatherForecast(45.5, 25.3))
-                .thenReturn(sampleWeather);
+        when(weatherApplicationService.getWeatherForecast(45.5, 25.3)).thenReturn(sampleWeather);
 
         mockMvc.perform(get("/api/v1/weather/forecast")
                         .param("latitude", "45.5")
@@ -86,11 +85,9 @@ public class WeatherControllerTest {
         cacheStats.put("cache_hit_rate", 0.85);
         cacheStats.put("average_cache_age_hours", 3.5);
 
-        when(weatherApplicationService.getCacheStatistics())
-                .thenReturn(cacheStats);
+        when(weatherApplicationService.getCacheStatistics()).thenReturn(cacheStats);
 
-        mockMvc.perform(get("/api/v1/weather/cache/stats")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/weather/cache/stats").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.total_cached_forecasts").value(42))
                 .andExpect(jsonPath("$.cache_hit_rate").value(0.85));
@@ -102,8 +99,7 @@ public class WeatherControllerTest {
     public void testClearWeatherCache() throws Exception {
         doNothing().when(weatherApplicationService).clearCache();
 
-        mockMvc.perform(delete("/api/v1/weather/cache")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/api/v1/weather/cache").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         verify(weatherApplicationService, times(1)).clearCache();
