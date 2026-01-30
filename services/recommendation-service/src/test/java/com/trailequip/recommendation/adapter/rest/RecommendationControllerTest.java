@@ -1,6 +1,5 @@
 package com.trailequip.recommendation.adapter.rest;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -8,11 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trailequip.recommendation.application.service.EquipmentRecommendationService;
-import com.trailequip.recommendation.application.service.TrailRecommendationService;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,193 +28,152 @@ public class RecommendationControllerTest {
     @MockBean
     private EquipmentRecommendationService equipmentRecommendationService;
 
-    @MockBean
-    private TrailRecommendationService trailRecommendationService;
-
     @Autowired
     private ObjectMapper objectMapper;
 
-    private Map<String, Object> recommendationRequest;
+    private Map<String, String> recommendationRequest;
     private Map<String, Object> equipmentRecommendation;
-    private List<Map<String, Object>> trailRecommendations;
+    private UUID trailId;
 
     @BeforeEach
     public void setup() {
+        trailId = UUID.randomUUID();
         recommendationRequest = new HashMap<>();
-        recommendationRequest.put("trailDifficulty", "MEDIUM");
-        recommendationRequest.put("temperature", 15);
-        recommendationRequest.put("rainProbability", 30);
-        recommendationRequest.put("windSpeed", 20);
+        recommendationRequest.put("trailId", trailId.toString());
+        recommendationRequest.put("forecastStart", "2024-01-30");
+        recommendationRequest.put("forecastEnd", "2024-02-05");
+
+        Map<String, Object> equipment = new HashMap<>();
+        equipment.put("category", "LAYERS");
+        equipment.put("items", Arrays.asList("Base Layer (Thermal)", "Mid Layer (Fleece)", "Outer Layer (Waterproof)"));
 
         equipmentRecommendation = new HashMap<>();
-        equipmentRecommendation.put("trailName", "Omu Peak Loop");
-        equipmentRecommendation.put("difficulty", "MEDIUM");
+        equipmentRecommendation.put("equipment", Arrays.asList(equipment));
+        equipmentRecommendation.put("warnings", Arrays.asList("High wind expected on ridges"));
         equipmentRecommendation.put(
-                "recommendedGear",
-                Arrays.asList("Hiking Boots", "Rain Jacket", "Backpack (30L)", "Water Bottle", "Sun Protection"));
-        equipmentRecommendation.put(
-                "warnings", Arrays.asList("Exposure on ridge", "Weather-dependent", "Bring extra layers"));
-        equipmentRecommendation.put(
-                "explanation", "MEDIUM difficulty trail with exposure and changeable weather requires proper gear");
-
-        Map<String, Object> trail1 = new HashMap<>();
-        trail1.put("id", "trail-1");
-        trail1.put("name", "Bulea Lake Forest Walk");
-        trail1.put("difficulty", "EASY");
-        trail1.put("distance", 6.8);
-        trail1.put("score", 0.95);
-        trail1.put("reason", "Perfect for current weather conditions");
-
-        Map<String, Object> trail2 = new HashMap<>();
-        trail2.put("id", "trail-2");
-        trail2.put("name", "Sphinx Ridge Scramble");
-        trail2.put("difficulty", "ROCK_CLIMBING");
-        trail2.put("distance", 8.3);
-        trail2.put("score", 0.65);
-        trail2.put("reason", "Challenging but doable with proper preparation");
-
-        trailRecommendations = Arrays.asList(trail1, trail2);
+                "summary", "Moderate conditions; bring layered system and rain protection");
     }
 
     @Test
     public void testGetEquipmentRecommendations() throws Exception {
-        when(equipmentRecommendationService.recommendEquipment(any())).thenReturn(equipmentRecommendation);
+        when(equipmentRecommendationService.recommend(any(UUID.class), any(String.class), any(String.class)))
+                .thenReturn(equipmentRecommendation);
 
         mockMvc.perform(post("/api/v1/recommendations/equipment")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(recommendationRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.trailName").value("Omu Peak Loop"))
-                .andExpect(jsonPath("$.recommendedGear", hasSize(5)))
-                .andExpect(jsonPath("$.recommendedGear[0]").value("Hiking Boots"))
-                .andExpect(jsonPath("$.warnings", hasSize(3)));
+                .andExpect(jsonPath("$.equipment").isArray())
+                .andExpect(jsonPath("$.equipment[0].category").value("LAYERS"))
+                .andExpect(jsonPath("$.warnings").isArray())
+                .andExpect(jsonPath("$.warnings[0]").value("High wind expected on ridges"))
+                .andExpect(jsonPath("$.summary").value("Moderate conditions; bring layered system and rain protection"));
 
-        verify(equipmentRecommendationService, times(1)).recommendEquipment(any());
+        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
     }
 
     @Test
-    public void testGetTrailRecommendations() throws Exception {
-        when(trailRecommendationService.recommendTrails(any())).thenReturn(trailRecommendations);
+    public void testGetEquipmentRecommendationsWithDifferentForecast() throws Exception {
+        Map<String, Object> differentRecommendation = new HashMap<>(equipmentRecommendation);
+        differentRecommendation.put("warnings", Arrays.asList("Extreme cold", "Heavy snow expected"));
 
-        mockMvc.perform(post("/api/v1/recommendations/trails")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(recommendationRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name").value("Bulea Lake Forest Walk"))
-                .andExpect(jsonPath("$[0].score").value(0.95))
-                .andExpect(jsonPath("$[1].difficulty").value("ROCK_CLIMBING"));
+        when(equipmentRecommendationService.recommend(any(UUID.class), any(String.class), any(String.class)))
+                .thenReturn(differentRecommendation);
 
-        verify(trailRecommendationService, times(1)).recommendTrails(any());
-    }
-
-    @Test
-    public void testGetEquipmentRecommendationsForEasyTrail() throws Exception {
-        Map<String, Object> easyRecommendation = new HashMap<>(equipmentRecommendation);
-        easyRecommendation.put("recommendedGear", Arrays.asList("Casual Hiking Shoes", "Light Jacket", "Water Bottle"));
-
-        when(equipmentRecommendationService.recommendEquipment(any())).thenReturn(easyRecommendation);
-
-        Map<String, Object> easyRequest = new HashMap<>(recommendationRequest);
-        easyRequest.put("trailDifficulty", "EASY");
+        Map<String, String> winterRequest = new HashMap<>(recommendationRequest);
+        winterRequest.put("forecastStart", "2024-02-01");
+        winterRequest.put("forecastEnd", "2024-02-10");
 
         mockMvc.perform(post("/api/v1/recommendations/equipment")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(easyRequest)))
+                        .content(objectMapper.writeValueAsString(winterRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.recommendedGear", hasSize(3)));
+                .andExpect(jsonPath("$.warnings").isArray())
+                .andExpect(jsonPath("$.warnings[0]").value("Extreme cold"));
 
-        verify(equipmentRecommendationService, times(1)).recommendEquipment(any());
+        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
     }
 
     @Test
-    public void testGetEquipmentRecommendationsForExtremeWeather() throws Exception {
-        Map<String, Object> extremeWeatherRecommendation = new HashMap<>(equipmentRecommendation);
-        extremeWeatherRecommendation.put(
-                "warnings",
-                Arrays.asList(
-                        "EXTREME: High wind speed",
-                        "Risk of hypothermia",
-                        "Trail may be impassable",
-                        "Consider turning back"));
-
-        when(equipmentRecommendationService.recommendEquipment(any())).thenReturn(extremeWeatherRecommendation);
-
-        Map<String, Object> extremeRequest = new HashMap<>(recommendationRequest);
-        extremeRequest.put("windSpeed", 50);
+    public void testGetEquipmentRecommendationsSuccess() throws Exception {
+        when(equipmentRecommendationService.recommend(any(UUID.class), any(String.class), any(String.class)))
+                .thenReturn(equipmentRecommendation);
 
         mockMvc.perform(post("/api/v1/recommendations/equipment")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(extremeRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.warnings", hasSize(4)));
-
-        verify(equipmentRecommendationService, times(1)).recommendEquipment(any());
-    }
-
-    @Test
-    public void testGetTrailRecommendationsSortedByScore() throws Exception {
-        when(trailRecommendationService.recommendTrails(any())).thenReturn(trailRecommendations);
-
-        mockMvc.perform(post("/api/v1/recommendations/trails")
-                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(recommendationRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].score").value(0.95))
-                .andExpect(jsonPath("$[1].score").value(0.65));
+                .andExpect(status().isOk());
 
-        verify(trailRecommendationService, times(1)).recommendTrails(any());
+        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
     }
 
     @Test
-    public void testRecommendationRequestValidation() throws Exception {
-        Map<String, Object> invalidRequest = new HashMap<>();
-        invalidRequest.put("trailDifficulty", "INVALID_DIFFICULTY");
+    public void testRecommendationRequestWithValidUUID() throws Exception {
+        when(equipmentRecommendationService.recommend(any(UUID.class), any(String.class), any(String.class)))
+                .thenReturn(equipmentRecommendation);
 
         mockMvc.perform(post("/api/v1/recommendations/equipment")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidRequest)))
-                .andExpect(status().isBadRequest());
+                        .content(objectMapper.writeValueAsString(recommendationRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.equipment").exists());
+
+        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
     }
 
     @Test
-    public void testGetBestTrailMatch() throws Exception {
-        Map<String, Object> bestMatch = trailRecommendations.get(0);
+    public void testRecommendationReturnsWarnings() throws Exception {
+        when(equipmentRecommendationService.recommend(any(UUID.class), any(String.class), any(String.class)))
+                .thenReturn(equipmentRecommendation);
 
-        when(trailRecommendationService.getBestTrailMatch(any())).thenReturn(bestMatch);
-
-        mockMvc.perform(post("/api/v1/recommendations/trails/best")
+        mockMvc.perform(post("/api/v1/recommendations/equipment")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(recommendationRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Bulea Lake Forest Walk"))
-                .andExpect(jsonPath("$.score").value(0.95));
+                .andExpect(jsonPath("$.warnings").isArray())
+                .andExpect(jsonPath("$.warnings.length()").value(1));
 
-        verify(trailRecommendationService, times(1)).getBestTrailMatch(any());
+        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
     }
 
     @Test
-    public void testGetRiskAssessment() throws Exception {
-        Map<String, Object> riskAssessment = new HashMap<>();
-        riskAssessment.put("overallRisk", "MODERATE");
-        riskAssessment.put("weatherRisk", "LOW");
-        riskAssessment.put("terrainRisk", "MODERATE");
-        riskAssessment.put(
-                "recommendations",
-                Arrays.asList(
-                        "Start early to avoid evening storms",
-                        "Bring emergency shelter",
-                        "Let someone know your plans"));
+    public void testRecommendationReturnsSummary() throws Exception {
+        when(equipmentRecommendationService.recommend(any(UUID.class), any(String.class), any(String.class)))
+                .thenReturn(equipmentRecommendation);
 
-        when(equipmentRecommendationService.getTrailRiskAssessment(any())).thenReturn(riskAssessment);
-
-        mockMvc.perform(post("/api/v1/recommendations/risk-assessment")
+        mockMvc.perform(post("/api/v1/recommendations/equipment")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(recommendationRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.overallRisk").value("MODERATE"))
-                .andExpect(jsonPath("$.recommendations", hasSize(3)));
+                .andExpect(jsonPath("$.summary").exists());
 
-        verify(equipmentRecommendationService, times(1)).getTrailRiskAssessment(any());
+        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
+    }
+
+    @Test
+    public void testRecommendationWithMultipleEquipmentCategories() throws Exception {
+        Map<String, Object> layersEquipment = new HashMap<>();
+        layersEquipment.put("category", "LAYERS");
+        layersEquipment.put("items", Arrays.asList("Base Layer", "Mid Layer", "Outer Layer"));
+
+        Map<String, Object> outerEquipment = new HashMap<>();
+        outerEquipment.put("category", "OUTERWEAR");
+        outerEquipment.put("items", Arrays.asList("Rain Jacket", "Wind Pants"));
+
+        Map<String, Object> multipleEquipmentResponse = new HashMap<>();
+        multipleEquipmentResponse.put("equipment", Arrays.asList(layersEquipment, outerEquipment));
+        multipleEquipmentResponse.put("warnings", Arrays.asList("High wind expected"));
+        multipleEquipmentResponse.put("summary", "Complex conditions ahead");
+
+        when(equipmentRecommendationService.recommend(any(UUID.class), any(String.class), any(String.class)))
+                .thenReturn(multipleEquipmentResponse);
+
+        mockMvc.perform(post("/api/v1/recommendations/equipment")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(recommendationRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.equipment.length()").value(2));
+
+        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
     }
 }
