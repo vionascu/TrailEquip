@@ -50,8 +50,7 @@ public class RecommendationControllerTest {
         equipmentRecommendation = new HashMap<>();
         equipmentRecommendation.put("equipment", Arrays.asList(equipment));
         equipmentRecommendation.put("warnings", Arrays.asList("High wind expected on ridges"));
-        equipmentRecommendation.put(
-                "summary", "Moderate conditions; bring layered system and rain protection");
+        equipmentRecommendation.put("summary", "Moderate conditions; bring layered system and rain protection");
     }
 
     @Test
@@ -67,9 +66,11 @@ public class RecommendationControllerTest {
                 .andExpect(jsonPath("$.equipment[0].category").value("LAYERS"))
                 .andExpect(jsonPath("$.warnings").isArray())
                 .andExpect(jsonPath("$.warnings[0]").value("High wind expected on ridges"))
-                .andExpect(jsonPath("$.summary").value("Moderate conditions; bring layered system and rain protection"));
+                .andExpect(
+                        jsonPath("$.summary").value("Moderate conditions; bring layered system and rain protection"));
 
-        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
+        verify(equipmentRecommendationService, times(1))
+                .recommend(any(UUID.class), any(String.class), any(String.class));
     }
 
     @Test
@@ -91,7 +92,8 @@ public class RecommendationControllerTest {
                 .andExpect(jsonPath("$.warnings").isArray())
                 .andExpect(jsonPath("$.warnings[0]").value("Extreme cold"));
 
-        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
+        verify(equipmentRecommendationService, times(1))
+                .recommend(any(UUID.class), any(String.class), any(String.class));
     }
 
     @Test
@@ -104,7 +106,8 @@ public class RecommendationControllerTest {
                         .content(objectMapper.writeValueAsString(recommendationRequest)))
                 .andExpect(status().isOk());
 
-        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
+        verify(equipmentRecommendationService, times(1))
+                .recommend(any(UUID.class), any(String.class), any(String.class));
     }
 
     @Test
@@ -118,7 +121,8 @@ public class RecommendationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.equipment").exists());
 
-        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
+        verify(equipmentRecommendationService, times(1))
+                .recommend(any(UUID.class), any(String.class), any(String.class));
     }
 
     @Test
@@ -133,7 +137,8 @@ public class RecommendationControllerTest {
                 .andExpect(jsonPath("$.warnings").isArray())
                 .andExpect(jsonPath("$.warnings.length()").value(1));
 
-        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
+        verify(equipmentRecommendationService, times(1))
+                .recommend(any(UUID.class), any(String.class), any(String.class));
     }
 
     @Test
@@ -147,7 +152,8 @@ public class RecommendationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.summary").exists());
 
-        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
+        verify(equipmentRecommendationService, times(1))
+                .recommend(any(UUID.class), any(String.class), any(String.class));
     }
 
     @Test
@@ -174,6 +180,7 @@ public class RecommendationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.equipment.length()").value(2));
 
-        verify(equipmentRecommendationService, times(1)).recommend(any(UUID.class), any(String.class), any(String.class));
+        verify(equipmentRecommendationService, times(1))
+                .recommend(any(UUID.class), any(String.class), any(String.class));
     }
 }
