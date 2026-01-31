@@ -10,10 +10,26 @@ echo "🚀 TrailEquip starting..."
 if [ -n "$DATABASE_URL" ]; then
   echo "✅ DATABASE_URL detected: $DATABASE_URL"
 
-  # Convert postgresql://user:pass@host:port/db to jdbc:postgresql://...?sslmode=require
+  # Convert postgresql://user:pass@host/db to jdbc:postgresql://host:5432/db?sslmode=require
+  # (Render's DATABASE_URL doesn't include port, so we need to add it)
   if echo "$DATABASE_URL" | grep -q "^postgresql://"; then
-    SPRING_DATASOURCE_URL="jdbc:${DATABASE_URL}?sslmode=require"
-    echo "🔌 Converted to JDBC format: $SPRING_DATASOURCE_URL"
+    # Parse URL: postgresql://user:pass@host/database
+    # Extract components using sed
+    USER_PASS=$(echo "$DATABASE_URL" | sed 's|.*://\(.*\)@.*|\1|')
+    HOST_DB=$(echo "$DATABASE_URL" | sed 's|.*@\(.*\)|\1|')
+    HOST=$(echo "$HOST_DB" | sed 's|/.*||')
+    DATABASE=$(echo "$HOST_DB" | sed 's|.*/||')
+
+    # Check if host already has port, if not add default port 5432
+    if echo "$HOST" | grep -q ":"; then
+      # Host already has port
+      SPRING_DATASOURCE_URL="jdbc:postgresql://${HOST}/${DATABASE}?sslmode=require"
+    else
+      # Add default PostgreSQL port
+      SPRING_DATASOURCE_URL="jdbc:postgresql://${HOST}:5432/${DATABASE}?sslmode=require"
+    fi
+
+    echo "🔌 Converted to JDBC format: $SPRING_DATASOURCE_URL" | sed 's/:\/\/.*@/:\/\/***@/'
   else
     SPRING_DATASOURCE_URL="$DATABASE_URL"
     echo "ℹ️  Using DATABASE_URL as-is"
