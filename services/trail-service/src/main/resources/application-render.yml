@@ -29,3 +29,6 @@ logging:
     com.trailequip: INFO
     org.springframework.web: WARN
     org.hibernate.SQL: WARN
+
+# DataSource is configured via RenderDataSourceConfig bean
+# which reads DATABASE_URL environment variable at runtime
