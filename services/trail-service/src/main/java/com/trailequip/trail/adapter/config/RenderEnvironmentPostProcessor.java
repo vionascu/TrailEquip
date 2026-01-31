@@ -23,13 +23,17 @@ public class RenderEnvironmentPostProcessor implements EnvironmentPostProcessor 
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+        System.out.println("🔍 RenderEnvironmentPostProcessor.postProcessEnvironment() called");
+
         // Check if DATABASE_URL is set (Render/Railway environment)
         String databaseUrl = System.getenv(DATABASE_URL_ENV);
 
         if (databaseUrl == null || databaseUrl.isEmpty()) {
-            // Local development - no DATABASE_URL
+            System.out.println("ℹ️  DATABASE_URL not set - using local/default configuration");
             return;
         }
+
+        System.out.println("✅ DATABASE_URL detected - configuring for Render/Railway");
 
         // Convert DATABASE_URL to JDBC format if needed
         String jdbcUrl = databaseUrl;
@@ -49,6 +53,7 @@ public class RenderEnvironmentPostProcessor implements EnvironmentPostProcessor 
         environment.getPropertySources().addFirst(new MapPropertySource(RENDER_DATASOURCE_PROPS, props));
 
         String maskedUrl = jdbcUrl.replaceAll(":[^@]*@", ":***@");
-        System.out.println("🔌 Render/Railway detected - Set SPRING_DATASOURCE_URL: " + maskedUrl);
+        System.out.println("🔌 Render/Railway deployment - SPRING_DATASOURCE_URL set to: " + maskedUrl);
+        System.out.println("✅ EnvironmentPostProcessor completed successfully");
     }
 }
