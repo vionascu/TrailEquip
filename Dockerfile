@@ -50,5 +50,16 @@ EXPOSE 8080
 ENV PORT=8080 \
     JAVA_OPTS="-Xmx512m -Xms256m"
 
-# Run application with environment variable support
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -Dserver.port=${PORT} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default} -Dspring.datasource.url=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=require -Dspring.datasource.username=${DB_USER} -Dspring.datasource.password=${DB_PASSWORD} -jar app.jar"]
+# Create startup script that handles environment variables
+RUN echo '#!/bin/sh' > /app/start.sh && \
+    echo 'set -e' >> /app/start.sh && \
+    echo 'exec java ${JAVA_OPTS} \' >> /app/start.sh && \
+    echo '  -Dserver.port=${PORT:-10000} \' >> /app/start.sh && \
+    echo '  -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default} \' >> /app/start.sh && \
+    echo '  -Dspring.datasource.url="jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=require" \' >> /app/start.sh && \
+    echo '  -Dspring.datasource.username=${DB_USER} \' >> /app/start.sh && \
+    echo '  -Dspring.datasource.password=${DB_PASSWORD} \' >> /app/start.sh && \
+    echo '  -jar app.jar' >> /app/start.sh && \
+    chmod +x /app/start.sh
+
+ENTRYPOINT ["/app/start.sh"]
