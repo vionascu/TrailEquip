@@ -1,6 +1,11 @@
 spring:
   application:
     name: trail-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/trailequip}
+    username: ${SPRING_DATASOURCE_USERNAME:trailequip}
+    password: ${SPRING_DATASOURCE_PASSWORD:trailequip_dev}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -29,6 +34,3 @@ logging:
     com.trailequip: INFO
     org.springframework.web: WARN
     org.hibernate.SQL: WARN
-
-# DataSource is configured via RenderDataSourceConfig bean
-# which reads DATABASE_URL environment variable at runtime

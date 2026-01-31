@@ -50,6 +50,24 @@ EXPOSE 8080
 ENV PORT=8080 \
     JAVA_OPTS="-Xmx512m -Xms256m"
 
-# Run application - environment variables passed from Render
-# DATABASE_URL is read directly from environment by RenderDataSourceConfig
-ENTRYPOINT ["sh", "-c", "exec java ${JAVA_OPTS} -Dserver.port=${PORT} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default} -jar app.jar"]
+# Create startup script that converts DATABASE_URL to JDBC format
+RUN echo '#!/bin/sh' > /app/entrypoint.sh && \
+    echo 'set -e' >> /app/entrypoint.sh && \
+    echo '' >> /app/entrypoint.sh && \
+    echo '# Convert DATABASE_URL to SPRING_DATASOURCE_URL if set' >> /app/entrypoint.sh && \
+    echo 'if [ -n "$DATABASE_URL" ]; then' >> /app/entrypoint.sh && \
+    echo '  # DATABASE_URL format: postgresql://user:pass@host:port/dbname' >> /app/entrypoint.sh && \
+    echo '  # Convert to: jdbc:postgresql://user:pass@host:port/dbname?sslmode=require' >> /app/entrypoint.sh && \
+    echo '  if echo "$DATABASE_URL" | grep -q "^postgresql://"; then' >> /app/entrypoint.sh && \
+    echo '    SPRING_DATASOURCE_URL="jdbc:${DATABASE_URL}?sslmode=require"' >> /app/entrypoint.sh && \
+    echo '  else' >> /app/entrypoint.sh && \
+    echo '    SPRING_DATASOURCE_URL="$DATABASE_URL"' >> /app/entrypoint.sh && \
+    echo '  fi' >> /app/entrypoint.sh && \
+    echo '  export SPRING_DATASOURCE_URL' >> /app/entrypoint.sh && \
+    echo '  echo "✅ SPRING_DATASOURCE_URL set from DATABASE_URL"' >> /app/entrypoint.sh && \
+    echo 'fi' >> /app/entrypoint.sh && \
+    echo '' >> /app/entrypoint.sh && \
+    echo 'exec java ${JAVA_OPTS} -Dserver.port=${PORT} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default} -jar app.jar' >> /app/entrypoint.sh && \
+    chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]
