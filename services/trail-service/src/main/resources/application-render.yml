@@ -1,6 +1,9 @@
 spring:
   application:
     name: trail-service
+  datasource:
+    url: jdbc:${DATABASE_URL}?sslmode=require
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,7 +15,7 @@ spring:
       enabled: true
 
 server:
-  port: 8080
+  port: 10000
 
 management:
   endpoints:

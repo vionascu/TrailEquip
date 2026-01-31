@@ -46,10 +46,9 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 # Expose port (Cloud Run uses PORT environment variable, default to 8080)
 EXPOSE 8080
 
-# Set environment variables for Cloud Run compatibility
+# Set environment variables for deployment
 ENV PORT=8080 \
-    JAVA_OPTS="-Xmx512m -Xms256m" \
-    SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    JAVA_OPTS="-Xmx512m -Xms256m"
 
-# Run application with PORT environment variable support
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -Dserver.port=${PORT} -jar app.jar"]
+# Run application with environment variable support
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -Dserver.port=${PORT} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default} -jar app.jar"]

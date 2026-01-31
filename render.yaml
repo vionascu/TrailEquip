@@ -12,6 +12,8 @@ services:
         fromDatabase:
           name: trail-equip-db
           property: connectionString
+      - key: PORT
+        value: "10000"
 
 databases:
   - name: trail-equip-db
