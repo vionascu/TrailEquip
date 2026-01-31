@@ -51,4 +51,5 @@ ENV PORT=8080 \
     JAVA_OPTS="-Xmx512m -Xms256m"
 
 # Run application - environment variables passed from Render
-ENTRYPOINT ["sh", "-c", "exec java ${JAVA_OPTS} -Dserver.port=${PORT} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default} -jar app.jar"]
+# Pass DATABASE_URL as a Spring property so @ConditionalOnProperty can detect it
+ENTRYPOINT ["sh", "-c", "exec java ${JAVA_OPTS} -Dserver.port=${PORT} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default} -Dspring.datasource.render-url=${DATABASE_URL} -jar app.jar"]

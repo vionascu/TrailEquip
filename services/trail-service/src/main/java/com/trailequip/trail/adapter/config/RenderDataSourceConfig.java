@@ -1,34 +1,48 @@
 package com.trailequip.trail.adapter.config;
 
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 
 /**
  * Render/Railway deployment DataSource configuration.
  *
- * When DATABASE_URL environment variable is present (Render/Railway):
- * - Creates DataSource using DATABASE_URL
- * - Converts PostgreSQL URL to JDBC format
- * - Adds SSL requirement
+ * Activates when spring.datasource.render-url property is set.
+ * This is set from DATABASE_URL environment variable via application properties.
  *
- * When DATABASE_URL is missing (local development):
- * - Returns null, letting Spring boot use default datasource from application.yml
+ * Converts PostgreSQL URL to JDBC format with SSL.
  */
 @Configuration
 public class RenderDataSourceConfig {
 
+    private static final Logger logger = LoggerFactory.getLogger(RenderDataSourceConfig.class);
+    private final Environment environment;
+
+    public RenderDataSourceConfig(Environment environment) {
+        this.environment = environment;
+    }
+
     @Bean
     @Primary
+    @ConditionalOnProperty(name = "spring.datasource.render-url")
     public DataSource dataSource() {
-        String databaseUrl = System.getenv("DATABASE_URL");
+        // Try to get from property first (set from DATABASE_URL env var)
+        String databaseUrl = environment.getProperty("spring.datasource.render-url");
 
-        // If DATABASE_URL not set, return null (let Spring use default config)
-        // This bean won't override application.yml datasource config
+        // Fallback to environment variable directly
         if (databaseUrl == null || databaseUrl.isEmpty()) {
-            return null;
+            databaseUrl = System.getenv("DATABASE_URL");
+        }
+
+        if (databaseUrl == null || databaseUrl.isEmpty()) {
+            logger.error("DATABASE_URL not available - Render deployment misconfigured");
+            throw new IllegalStateException("DATABASE_URL must be set for Render deployment");
         }
 
         // DATABASE_URL format: postgresql://user:password@host:port/dbname
@@ -41,9 +55,9 @@ public class RenderDataSourceConfig {
             jdbcUrl += "?sslmode=require";
         }
 
-        System.out.println("🔌 Using DATABASE_URL for datasource: " + jdbcUrl.replaceAll(":[^@]*@", ":***@"));
+        String maskedUrl = jdbcUrl.replaceAll(":[^@]*@", ":***@");
+        logger.info("✅ Render deployment - Using DATABASE_URL: {}", maskedUrl);
 
-        // DataSource with embedded credentials in URL
         return DataSourceBuilder.create()
                 .driverClassName("org.postgresql.Driver")
                 .url(jdbcUrl)
