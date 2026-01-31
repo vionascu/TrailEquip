@@ -28,11 +28,26 @@ fi
 
 # Show what we're about to run
 echo ""
-echo "📋 Starting Java with:"
+echo "📋 Environment Variables:"
+echo "   DATABASE_URL: $(echo $DATABASE_URL | sed 's/:\/\/.*@/:\/\/***@/')"
+echo "   SPRING_DATASOURCE_URL: $(echo $SPRING_DATASOURCE_URL | sed 's/:\/\/.*@/:\/\/***@/')"
 echo "   PORT: ${PORT:-8080}"
 echo "   SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}"
 echo "   JAVA_OPTS: ${JAVA_OPTS}"
 echo ""
 
-# Run Java
-exec java ${JAVA_OPTS} -Dserver.port=${PORT} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default} -jar app.jar
+# Build Java command with explicit datasource property as fallback
+JAVA_DATASOURCE_PROP=""
+if [ -n "$SPRING_DATASOURCE_URL" ]; then
+  JAVA_DATASOURCE_PROP="-Dspring.datasource.url=$SPRING_DATASOURCE_URL"
+fi
+
+echo "📝 Datasource property flag: $JAVA_DATASOURCE_PROP"
+echo ""
+
+# Run Java with both environment variable and system property
+exec java ${JAVA_OPTS} \
+  -Dserver.port=${PORT:-8080} \
+  -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-render} \
+  $JAVA_DATASOURCE_PROP \
+  -jar app.jar
