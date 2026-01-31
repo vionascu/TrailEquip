@@ -55,6 +55,7 @@ subprojects {
 
         // Testing
         testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation("org.springframework.boot:spring-boot-test-autoconfigure")
         testImplementation("org.junit.jupiter:junit-jupiter-api")
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.mockito:mockito-core")
