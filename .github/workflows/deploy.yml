@@ -40,14 +40,12 @@ jobs:
           cache: gradle
 
       - name: Run unit & integration tests
-        run: |
-          cd /Users/viionascu/Projects/TrailEquip
-          ./gradlew test --info
+        run: ./gradlew test --info
+        working-directory: ./services/trail-service
 
       - name: Build project
-        run: |
-          cd /Users/viionascu/Projects/TrailEquip
-          ./gradlew build -x test
+        run: ./gradlew build -x test
+        working-directory: ./services/trail-service
 
   # ========== STAGE 3: DEPLOY ==========
   deploy:
