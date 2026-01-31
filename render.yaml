@@ -3,20 +3,29 @@ services:
     name: trail-equip
     runtime: docker
     plan: free
-    region: ohio
+    region: oregon
     healthCheckPath: /actuator/health
     envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: trail-equip-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: trail-equip-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: trail-equip-db
+          property: password
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
       - key: SPRING_JPA_DATABASE_PLATFORM
         value: org.hibernate.dialect.PostgreSQL10Dialect
-      - key: SPRING_APPLICATION_NAME
-        value: trail-equip
-      - fromGroup: trail-equip-db
 
 databases:
   - name: trail-equip-db
     plan: free
-    region: ohio
+    region: oregon
     databaseName: trailequip
     user: trailequip_user
