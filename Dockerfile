@@ -43,12 +43,13 @@ USER appuser
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8081/actuator/health || exit 1
 
-# Expose ports
-EXPOSE 8081
+# Expose port (Cloud Run uses PORT environment variable, default to 8080)
+EXPOSE 8080
 
-# Set environment variables
-ENV JAVA_OPTS="-Xmx512m -Xms256m" \
+# Set environment variables for Cloud Run compatibility
+ENV PORT=8080 \
+    JAVA_OPTS="-Xmx512m -Xms256m" \
     SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
-# Run application
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]
+# Run application with PORT environment variable support
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -Dserver.port=${PORT} -jar app.jar"]

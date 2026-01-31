@@ -148,6 +148,7 @@ deploy_docs:
   stage: deploy
   image: alpine:latest
   script:
-    - echo "Documentation deployment: docs are available in the repository"
+    - echo "Documentation deployment - docs available in repo"
   only:
     - main
+  when: manual
