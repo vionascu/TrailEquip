@@ -13,11 +13,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TrailRepository extends JpaRepository<Trail, UUID> {
-    List<Trail> findByDifficulty(String difficulty);
+    @Query("SELECT t FROM Trail t WHERE t.difficulty = :difficulty ORDER BY t.name")
+    List<Trail> findByDifficulty(@Param("difficulty") Difficulty difficulty);
 
     // For now, return trails by difficulty (geographic queries require PostGIS)
     @Query("SELECT t FROM Trail t WHERE t.difficulty = :difficulty OR :difficulty IS NULL ORDER BY t.name")
-    List<Trail> findTrailsInArea(@Param("difficulty") String difficulty);
+    List<Trail> findTrailsInArea(@Param("difficulty") Difficulty difficulty);
 
     // OSM Integration Queries
     Optional<Trail> findByOsmId(Long osmId);

@@ -1,5 +1,6 @@
 package com.trailequip.trail.application.service;
 
+import com.trailequip.trail.domain.model.Difficulty;
 import com.trailequip.trail.domain.model.Trail;
 import com.trailequip.trail.domain.repository.TrailRepository;
 import com.trailequip.trail.domain.service.DifficultyClassifier;
@@ -36,13 +37,29 @@ public class TrailApplicationService {
     }
 
     public List<Trail> getTrailsByDifficulty(String difficulty) {
-        return trailRepository.findByDifficulty(difficulty);
+        if (difficulty == null || difficulty.isEmpty()) {
+            return trailRepository.findAll();
+        }
+        try {
+            Difficulty difficultyEnum = Difficulty.valueOf(difficulty.toUpperCase());
+            return trailRepository.findByDifficulty(difficultyEnum);
+        } catch (IllegalArgumentException e) {
+            return List.of();
+        }
     }
 
     public List<Trail> suggestTrailsInArea(double centerLat, double centerLon, double radiusKm, String difficulty) {
         // Note: Geographic filtering with centerLat/centerLon/radiusKm requires PostGIS
         // For now, only filtering by difficulty is implemented
-        return trailRepository.findTrailsInArea(difficulty);
+        if (difficulty == null || difficulty.isEmpty()) {
+            return trailRepository.findAll();
+        }
+        try {
+            Difficulty difficultyEnum = Difficulty.valueOf(difficulty.toUpperCase());
+            return trailRepository.findTrailsInArea(difficultyEnum);
+        } catch (IllegalArgumentException e) {
+            return List.of();
+        }
     }
 
     public Trail updateTrail(Trail trail) {

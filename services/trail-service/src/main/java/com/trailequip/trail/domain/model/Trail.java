@@ -225,6 +225,10 @@ public class Trail {
 
     // ===== SETTERS =====
 
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public void setId(UUID id) {
         this.id = id;
     }

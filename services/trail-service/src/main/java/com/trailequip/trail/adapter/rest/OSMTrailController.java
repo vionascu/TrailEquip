@@ -2,6 +2,7 @@ package com.trailequip.trail.adapter.rest;
 
 import com.trailequip.trail.application.service.OSMIngestionService;
 import com.trailequip.trail.application.service.TrailExportService;
+import com.trailequip.trail.domain.model.Difficulty;
 import com.trailequip.trail.domain.model.Trail;
 import com.trailequip.trail.domain.repository.TrailRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -164,7 +165,12 @@ public class OSMTrailController {
             List<Trail> trails;
 
             if (difficulty != null) {
-                trails = trailRepository.findByDifficulty(difficulty);
+                try {
+                    Difficulty difficultyEnum = Difficulty.valueOf(difficulty.toUpperCase());
+                    trails = trailRepository.findByDifficulty(difficultyEnum);
+                } catch (IllegalArgumentException e) {
+                    trails = List.of();
+                }
             } else if (source != null) {
                 trails = trailRepository.findBySource(source);
             } else {
