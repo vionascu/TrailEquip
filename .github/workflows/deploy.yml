@@ -1,4 +1,7 @@
 name: Build and Deploy Docker
+# GitHub Actions CI/CD Pipeline
+# ✅ Unlimited CI/CD minutes (no pipeline charges)
+# 🚀 Deployment: Manual via Railway (not automatic)
 
 on:
   push:
@@ -80,24 +83,36 @@ jobs:
             trail-equip:latest
             trail-equip:${{ github.sha }}
 
-      - name: Log deployment success
+      - name: Build Complete - Ready for Railway Deployment
         run: |
-          echo "✅ PIPELINE SUCCESS - All stages completed!"
+          echo "╔════════════════════════════════════════════════════════════════╗"
+          echo "║           ✅ CI/CD PIPELINE COMPLETE - ZERO COST               ║"
+          echo "╚════════════════════════════════════════════════════════════════╝"
           echo ""
-          echo "📊 Build Details:"
-          echo "  Repository: ${{ github.repository }}"
-          echo "  Commit: ${{ github.sha }}"
-          echo "  Branch: ${{ github.ref }}"
+          echo "📊 Build Summary:"
+          echo "  ✅ Repository: ${{ github.repository }}"
+          echo "  ✅ Commit: ${{ github.sha }}"
+          echo "  ✅ Branch: ${{ github.ref }}"
           echo ""
-          echo "✅ Stage 1: Build - Docker image compiled"
-          echo "✅ Stage 2: Test  - Unit tests passed"
-          echo "✅ Stage 3: Deploy - Docker image ready"
+          echo "✅ Stage 1: Build     - Docker image compiled"
+          echo "✅ Stage 2: Test      - Unit tests passed"
+          echo "✅ Stage 3: Prepare   - Docker image ready"
           echo ""
-          echo "🚀 Next step: Connect to Railway for auto-deployment"
-          echo "  1. Visit: https://railway.app"
-          echo "  2. Create New Project"
-          echo "  3. Deploy from GitHub"
-          echo "  4. Select: vionascu/trail-equip"
-          echo "  5. Railway will build and deploy automatically"
+          echo "════════════════════════════════════════════════════════════════"
+          echo "🚀 DEPLOYMENT: Use Railway (Unlimited CI/CD)"
+          echo "════════════════════════════════════════════════════════════════"
           echo ""
-          echo "⏱️  GitHub Actions: ✅ Unlimited CI/CD minutes"
+          echo "📌 Render Webhook: DISCONNECTED (no pipeline minute waste)"
+          echo ""
+          echo "🔄 To Deploy via Railway:"
+          echo "   1. Visit: https://railway.app"
+          echo "   2. New Project → Import from GitHub"
+          echo "   3. Select: vionascu/TrailEquip"
+          echo "   4. Connect PostgreSQL database"
+          echo "   5. Railway auto-deploys on GitHub push"
+          echo ""
+          echo "💰 Cost Analysis:"
+          echo "   Render:  Charges when free tier used ($5/1000 min)"
+          echo "   Railway: $5/month free credit (better for hobby)"
+          echo "   GitHub:  UNLIMITED CI/CD minutes (always FREE)"
+          echo ""
